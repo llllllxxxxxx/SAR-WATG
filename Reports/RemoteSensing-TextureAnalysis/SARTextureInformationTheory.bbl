@@ -1,0 +1,100 @@
+\begin{thebibliography}{-------}
+\providecommand{\natexlab}[1]{#1}
+
+\bibitem[Lee and Hsueh(1994)]{Lee1994Texture}
+Lee, J.H.; Hsueh, Y.C.
+\newblock Texture classification method using multiple space filling curves.
+\newblock {\em Pattern Recognition Letters} {\bf 1994}, {\em 15},~1241 -- 1244.
+\newblock
+  doi:{\changeurlcolor{black}\href{https://doi.org/https://doi.org/10.1016/0167-8655(94)90114-7}{\detokenize{https://doi.org/10.1016/0167-8655(94)90114-7}}}.
+
+\bibitem[Bandt and Pompe(2002)]{Bandt2002Permutation}
+Bandt, C.; Pompe, B.
+\newblock Permutation Entropy: A Natural Complexity Measure for Time Series.
+\newblock {\em Physical review letters} {\bf 2002}, {\em 88},~174102.
+
+\bibitem[Nguyen and Quinqueton(1982)]{Nguyen1982SpaceFC}
+Nguyen, P.T.; Quinqueton, J.
+\newblock Space filling curves and texture analysis.
+\newblock  1982.
+
+\bibitem[Gray(1990)]{Gray1990Entropy}
+Gray, R.M.
+\newblock {\em Entropy and Information Theory}; Springer-Verlag: Berlin,
+  Heidelberg,  1990.
+
+\bibitem[Brodatz(1966)]{Brodatz1996Textures}
+Brodatz, P.
+\newblock {\em Textures: A Photographic Album for Artists and Designers}; Dover
+  Publications: New York,  1966.
+
+\bibitem[Sarkar and Chaudhuri(1995)]{Sarkar1995Multifractal}
+Sarkar, N.; Chaudhuri, B.
+\newblock Multifractal and generalized dimensions of gray-tone digital images.
+\newblock {\em Signal Processing} {\bf 1995}, {\em 42},~181 -- 190.
+\newblock
+  doi:{\changeurlcolor{black}\href{https://doi.org/https://doi.org/10.1016/0165-1684(94)00126-K}{\detokenize{https://doi.org/10.1016/0165-1684(94)00126-K}}}.
+
+\bibitem[Lee and Hsieh(2010)]{Lee2010Robust}
+Lee, W.L.; Hsieh, K.S.
+\newblock A robust algorithm for the fractal dimension of images and its
+  applications to the classification of natural images and ultrasonic liver
+  images.
+\newblock {\em Signal Processing} {\bf 2010}, {\em 90},~1894 -- 1904.
+\newblock
+  doi:{\changeurlcolor{black}\href{https://doi.org/https://doi.org/10.1016/j.sigpro.2009.12.010}{\detokenize{https://doi.org/10.1016/j.sigpro.2009.12.010}}}.
+
+\bibitem[Florindo and Bruno(2012)]{Florindo2012Fractal}
+Florindo, J.B.; Bruno, O.M.
+\newblock Fractal descriptors based on Fourier spectrum applied to texture
+  analysis.
+\newblock {\em Physica A: Statistical Mechanics and its Applications} {\bf
+  2012}, {\em 391},~4909 -- 4922.
+\newblock
+  doi:{\changeurlcolor{black}\href{https://doi.org/https://doi.org/10.1016/j.physa.2012.03.039}{\detokenize{https://doi.org/10.1016/j.physa.2012.03.039}}}.
+
+\bibitem[Gonçalves \em{et~al.}(2014)Gonçalves, Machado, and
+  Bruno]{Goncalves2014Texture}
+Gonçalves, W.N.; Machado, B.B.; Bruno, O.M.
+\newblock Texture descriptor combining fractal dimension and artificial
+  crawlers.
+\newblock {\em Physica A: Statistical Mechanics and its Applications} {\bf
+  2014}, {\em 395},~358 -- 370.
+\newblock
+  doi:{\changeurlcolor{black}\href{https://doi.org/https://doi.org/10.1016/j.physa.2013.10.011}{\detokenize{https://doi.org/10.1016/j.physa.2013.10.011}}}.
+
+\bibitem[da~Silva~Oliveira \em{et~al.}(2015)da~Silva~Oliveira, da~Silva,
+  Manzanera, and Bruno]{Oliveira2015Feature}
+da~Silva~Oliveira, M.W.; da~Silva, N.R.; Manzanera, A.; Bruno, O.M.
+\newblock Feature extraction on local jet space for texture classification.
+\newblock {\em Physica A: Statistical Mechanics and its Applications} {\bf
+  2015}, {\em 439},~160 -- 170.
+\newblock
+  doi:{\changeurlcolor{black}\href{https://doi.org/https://doi.org/10.1016/j.physa.2015.06.046}{\detokenize{https://doi.org/10.1016/j.physa.2015.06.046}}}.
+
+\bibitem[Davarzani \em{et~al.}(2015)Davarzani, Mozaffari, and
+  Yaghmaie]{Davarzani2015Scale}
+Davarzani, R.; Mozaffari, S.; Yaghmaie, K.
+\newblock Scale- and rotation-invariant texture description with improved local
+  binary pattern features.
+\newblock {\em Signal Processing} {\bf 2015}, {\em 111},~274 -- 293.
+\newblock
+  doi:{\changeurlcolor{black}\href{https://doi.org/https://doi.org/10.1016/j.sigpro.2014.11.005}{\detokenize{https://doi.org/10.1016/j.sigpro.2014.11.005}}}.
+
+\bibitem[Zunino and Ribeiro(2016)]{zunino2016discriminating}
+Zunino, L.; Ribeiro, H.
+\newblock Discriminating image textures with the multiscale two-dimensional
+  complexity-entropy causality plane.
+\newblock {\em Chaos, Solitons \& Fractals} {\bf 2016}, {\em 91},~679--688.
+\newblock
+  doi:{\changeurlcolor{black}\href{https://doi.org/10.1016/j.chaos.2016.09.005}{\detokenize{10.1016/j.chaos.2016.09.005}}}.
+
+\bibitem[Ester \em{et~al.}(1996)Ester, Kriegel, Sander, and
+  Xu]{Ester1996DBSCAN}
+Ester, M.; Kriegel, H.P.; Sander, J.; Xu, X.
+\newblock A Density-based Algorithm for Discovering Clusters a Density-based
+  Algorithm for Discovering Clusters in Large Spatial Databases with Noise.
+\newblock  Proceedings of the Second International Conference on Knowledge
+  Discovery and Data Mining. AAAI Press,  1996, KDD'96, pp. 226--231.
+
+\end{thebibliography}
