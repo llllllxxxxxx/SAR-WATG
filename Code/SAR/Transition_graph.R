@@ -22,7 +22,7 @@ source("Theory_Information.R")
 
 ############################### Transition graphs functions ############################################
 
-sliding.window2 <- function(series, dimension, delay){
+sliding.window <- function(series, dimension, delay){
   i = j = 1
   n = length(series)
   elements = matrix(nrow = n-(dimension-1)*delay, ncol = dimension)
@@ -31,6 +31,17 @@ sliding.window2 <- function(series, dimension, delay){
     elements[j,] = series[s + i]
     i = i + 1
     j = j + 1
+  }
+  elements
+}
+
+sw <- function(series, dimension, delay){
+  init = 1
+  n = length(series)
+  elements = matrix(nrow = n-(dimension-1)*delay, ncol = dimension)
+  for(i in 1:dimension){
+    elements[,i] = series[init:(init - 1 + (n - (dimension-1)*delay))] 
+    init = init + 1
   }
   elements
 }
@@ -200,12 +211,12 @@ transition.graph.analysis <- function(){
     }
     b = b + 1
     Entropy.Complexity <- matrix(nrow = (ns.guatemala + ns.canaveral.behavior1 + ns.canaveral.behavior2 + ns.munich), ncol = 2)
-    #GUatemala
+    #Guatemala
     sar_data <- raster(paste("../../Data/", "guatemala", "/HHHH", ".grd", sep = ""))
     for(j in c(1:ns.guatemala)){
       img <- getValuesBlock(sar_data, row = dimen.guatemala[j,1], nrows = dimen.guatemala[j,2], col = dimen.guatemala[j,3], ncols = dimen.guatemala[j,4], format = "matrix")
       ts = img[hilbertcurve]/max(img[hilbertcurve])
-      e = sliding.window2(ts, n[a], tal[b])
+      e = sliding.window(ts, n[a], tal[b])
       p = formation.pattern(e)
       w = pattern.wedding(p)
       g = transition.graph(e, w, n[a])
@@ -218,7 +229,7 @@ transition.graph.analysis <- function(){
     for(j in c(1:ns.canaveral.behavior1)){
       img <- getValuesBlock(sar_data, row = dimen.canaveral.behavior1[j,1], nrows = dimen.canaveral.behavior1[j,2], col = dimen.canaveral.behavior1[j,3], ncols = dimen.canaveral.behavior1[j,4], format = "matrix")
       ts = img[hilbertcurve]/max(img[hilbertcurve])
-      e = sliding.window2(ts, n[a], tal[b])
+      e = sliding.window(ts, n[a], tal[b])
       p = formation.pattern(e)
       w = pattern.wedding(p)
       g = transition.graph(e, w, n[a])
@@ -231,7 +242,7 @@ transition.graph.analysis <- function(){
     for(j in c(1:ns.canaveral.behavior2)){
       img <- getValuesBlock(sar_data, row = dimen.canaveral.behavior2[j,1], nrows = dimen.canaveral.behavior2[j,2], col = dimen.canaveral.behavior2[j,3], ncols = dimen.canaveral.behavior2[j,4], format = "matrix")
       ts = img[hilbertcurve]/max(img[hilbertcurve])
-      e = sliding.window2(ts, n[a], tal[b])
+      e = sliding.window(ts, n[a], tal[b])
       p = formation.pattern(e)
       w = pattern.wedding(p)
       g = transition.graph(e, w, n[a])
@@ -244,7 +255,7 @@ transition.graph.analysis <- function(){
     for(j in c(1:ns.munich)){
       img <- getValuesBlock(sar_data, row = dimen.munich[j,1], nrows = dimen.munich[j,2], col = dimen.munich[j,3], ncols = dimen.munich[j,4], format = "matrix")
       ts = img[hilbertcurve]/max(img[hilbertcurve])
-      e = sliding.window2(ts, n[a], tal[b])
+      e = sliding.window(ts, n[a], tal[b])
       p = formation.pattern(e)
       w = pattern.wedding(p)
       g = transition.graph(e, w, n[a])
