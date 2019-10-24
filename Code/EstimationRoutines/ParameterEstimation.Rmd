@@ -1,5 +1,5 @@
 ---
-title: "Estimação do parâmetro Alpha da distribuição GI0"
+title: "Lista de exercícios 5"
 author: "Eduarda Chagas"
 date: "August 15, 2019"
 output: html_document
