@@ -98,6 +98,7 @@ Guatemala.signal = (Guatemala.signal - min(Guatemala.signal))/(max(Guatemala.sig
 guatemala <- qplot(x = c(1:length(Guatemala.signal)), y = Guatemala.signal, geom = "line", main = "Guatemala", xlab = "Observation", ylab = "Serie") +
   theme_few(base_size = 18, base_family = "serif")  + theme(plot.title = element_text(hjust=0.5)) + 
   scale_colour_few("Dark")
+plot(guatemala)
 
 #################################################################################################################
 
@@ -107,6 +108,7 @@ Canaveral.signal = (Canaveral.signal - min(Canaveral.signal))/(max(Canaveral.sig
 canaveral <- qplot(x = c(1:length(Canaveral.signal)), y = Canaveral.signal, geom = "line", main = "Cape Canaveral", xlab = "Observation", ylab = "Serie") +
   theme_few(base_size = 18, base_family = "serif")  + theme(plot.title = element_text(hjust=0.5)) + 
   scale_colour_few("Dark")
+plot(canaveral)
 
 #################################################################################################################
 
@@ -116,6 +118,7 @@ Munich.signal = (Munich.signal - min(Munich.signal))/(max(Munich.signal)- min(Mu
 munich <- qplot(x = c(1:length(Munich.signal)), y = Munich.signal, geom = "line", main = "Munich", xlab = "Observation", ylab = "Serie") +
   theme_few(base_size = 18, base_family = "serif")  + theme(plot.title = element_text(hjust=0.5)) + 
   scale_colour_few("Dark")
+plot(munich)
 
 #################################################################################################################
 

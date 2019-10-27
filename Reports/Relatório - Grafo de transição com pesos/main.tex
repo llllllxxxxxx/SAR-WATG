@@ -28,18 +28,22 @@
 
 \section{Introduction}\label{Intro}
 
-Diante dos atuais métodos que nos fornecem informações da estrutura ordinal da série, recentes trabalhos sugerem uma ponderação no cálculo das frequências relativas para padrões ordinais com variância de amplitude diferentes, fazendo-os contribuir de maneira diferente no valor final de PE e assim incorporando a informação de mudança de amplitude dentro de um determinado conjunto de dados~\citep{Fadlallah2013Weightedpermutation}.
+Diante dos atuais métodos que nos fornecem informações da estrutura ordinal da série, recentes trabalhos sugerem uma ponderação no cálculo das frequências relativas para padrões ordinais com variância de amplitude diferentes, fazendo-os contribuir de maneira diferente no valor final da entropia de permutação (PE) e assim incorporando a informação de mudança de amplitude dentro de um determinado conjunto de dados~\citep{Fadlallah2013Weightedpermutation}.
 %%% ACF O que é PE?
+%%% ETC Done
 
-No entanto, analisando os atuais métodos ainda percebemos uma grande falha em suas definições: não consideram a diferença de amplitude presente em diferentes séries temporais, ponderando-as de maneira semelhante no cálculo do valor final de suas probabilidades.
-%%% ACF Evite falar em "falha". Se a memória não me "falha" há, sim, uma técnica que pondera pela diferença de amplitudes para Bandt & Pompe. Verifique, por favor, e faça a ponte para a sua técnica.
+No entanto, analisando os atuais métodos ainda percebemos que estes não consideram a diferença de amplitude presente em diferentes séries temporais, ponderando-as de maneira semelhante no cálculo do valor final de suas probabilidades.
+%%% ACF Evite falar em "falha". 
+%%% ETC Done
+%%% ACF Se a memória não me "falha" há, sim, uma técnica que pondera pela diferença de amplitudes para Bandt & Pompe. Verifique, por favor, e faça a ponte para a sua técnica.
 Logo, dados com diferentes amplitudes porém com dinâmica de variâncias similares não são discriminados, perdendo importantes informações acerca da dinâmica do sistema.
 
 Para contrabalançar esses fatos, propomos uma modificação do atual procedimento dos grafos de transição de padrões ordinais para incorporar informações significativas das séries temporais, tendo como principal motivação salvar informações úteis de amplitude transportadas pelo sinal.
 
 Avaliamos nossa técnica propondo uma nova metodologia de caracterização de regiões em texturas de imagens \texttt{SAR}. 
-Ao receber uma textura realizamos o processo de linearização aplicando \textit{space filling curves}, e por meio do grafo de transição de amplitude ponderada usamos o poder discriminatório da Teoria da Informação para realizar a caracterização.
+Ao receber uma textura realizamos o processo de linearização aplicando \textit{space filling curves} transformando-a em uma série temporal, e por meio do grafo de transição de amplitude ponderada proposto usamos o poder discriminatório dos descritores da Teoria da Informação (entropia de permutação e complexidade estatística) para realizar a caracterização de diferentes regiões.
 %%% ACF Eu entendo do que se trata o primeiro passo, porém no artigo será necessário dar mais detalhes
+%%% ETC Done
 
 O artigo foi dividido do seguinte modo: 
 Na seção~\ref{OP}, introduzimos o conceito de simbolização em padrões ordinais em séries temporais, descrevendo o método de Bandt \& Pompe; 
@@ -63,7 +67,7 @@ Os símbolos ou palavras $\mathbb{X}_t^{m,\tau}$ realizados em cada instante $t 
 O conjunto de padrões ordinais $\pi = \{\pi_t^m : t = 1, \dots, T-(m-1)\tau\}$ são obtidos pelo mapeamento $\mathbb{X}^{m,\tau}_t \mapsto \pi^m$ realizado através do processo de permutação dos elementos, de tal forma que estes estejam ordenados de forma crescente~\citep{Ravetti2014noise}:
 $$ x_{(t-1)+\tau} \leq x_{(t-1)+\tau+1} \leq \ldots \leq x_{(t-1)+\tau+(m-1)}. $$ 
 
-A distribuição de probabilidade de Bandt-Pompe é a frequência relativa dos símbolos da série diante das $m!$ possíveis permutações dos padrões $\{\pi_t^m\}_{t=1}^{m!}$:
+Sendo $\Pi$ a sequência de símbolos obtidos por uma dada série $\mathbb{X}_t^{m,\tau}$, a distribuição de probabilidade de Bandt-Pompe é a frequência relativa dos símbolos da série diante das $m!$ possíveis permutações dos padrões $\{\pi_t^m\}_{t=1}^{m!}$:
 \begin{equation}
     p(\pi_i^m) = \frac{\#\left \{t : t = 1, \dots, T-(m-1)\tau; \mathbb{X}_t^{m,\tau} \text{ do tipo } \pi_i^m\right \}}{T- (m-1)\tau},  
 \end{equation}
@@ -73,8 +77,9 @@ que satisfaz as condições $p(\pi_i^m) \ge 0$ e  $\sum_{i=1}^{m!} p(\pi_i^m) = 
 
 Procurando extrair características intrínsecas do fenômenos geradores das séries temporais, os grafos de transição de padrões ordinais surgem como uma etapa adicional na análise não-paramétrica por descritores da Teoria da Informação.
 
-Sendo $\Pi$ a sequência de símbolos obtidos por uma dada série $\mathbb{X}_t^{m,\tau}$, o grafo $\vec{G}_{\pi} = (\vec{V}, \vec{E})$ nos informa as transições entre dois padrões ordinais consecutivos ao longo do tempo $t$.
+O grafo $\vec{G}_{\pi} = (\vec{V}, \vec{E})$ nos informa as transições entre dois padrões ordinais consecutivos ao longo do tempo $t$.
 %%% ACF Defina \Pi na seção anterior.
+%%% ETC Done
 Nesta nova representação, os padrões $\{\pi_t^m\}_{t=1}^{m!}$ correspondem aos vértices do conjunto $\vec{V} = \{ v_{\pi_i}:i = 1, \dots, m!\}$ e as arestas $\vec{E} = \{(v_{\pi_i}, v_{\pi_j}): v_{\pi_i}, v_{\pi_j} \in V\}$ nos indicam a ocorrência sequencial de dois padrões ordinais no conjunto de dados analisado.
 
 Duas abordagens são consideradas em relação ao peso das arestas na literatura: alguns autores empregam arestas não ponderadas~\citep{McCullough2015lagged, Kulp2016ordinal} representando apenas a existência de tais transições, enquanto outros aplicam a frequência das transições como pesos~\citep{Sorrentino2015periodic, Zhang2017ConstructingOP}.
@@ -90,8 +95,16 @@ em que $|\Pi_{\pi_i,\pi_j}|$ é o número de transições do padrão $\pi_i$ par
 
 Nos referimos a esse procedimento como grafo de transição de amplitude ponderada (WATG) e resumimos nas etapas a seguir. 
 
-Primeiramente, cada série temporal $\mathbb{X}$ deverá ser normalizada com valores em $[0,1]$, uma vez que estamos gerando uma métrica de comparabilidade de diferentes conjuntos de dados.
+Primeiramente, cada série temporal $\mathbb{X}$ será redimensionada, tendo seus valores reescalados para que se encontrem dentro do intervalo $[0, 1]$,  uma vez que estamos gerando uma métrica de comparabilidade entre diferentes conjuntos de dados. 
+Desse modo, para isso utilizamos o seguinte processo de normalização:
+
+\begin{equation}
+    x_{new} = \frac{x - x_{min}}{x_{max} - x_{min}}
+\end{equation}
+
 %%% ACF Aqui informe sob quais condições será feito esse mapeamento: estritamente crescente? Por exemplo, uma equalização dos dados?
+%%% ETC Done
+
 
 Cada vetor $\mathbb{X}^{m, \tau}_t$ será associado com um valor de peso $\beta_t$, indicando a sua amplitude. 
 Tal valor será dado por meio da maior diferença entre os seus elementos, como podemos ver a seguir:
@@ -206,15 +219,12 @@ Assim, alvos urbanos são os que costumam dar mais altos retornos, seguidos por 
 
 Portanto, neste trabalho objetivamos representar por meio do grafo de transição de amplitude ponderada modelar essa diferença de amplitude na distribuição de probabilidade dos nossos dados.
 A metodologia de análise proposta e aplicada no conjunto de dados de texturas \texttt{SAR} pode ser vista na figura~\ref{fig:WATG}.
-%%% ACF "Time" soa estranho; pensar em outra denominação para o eixo das abscissas. Denomine "Observation" ou "Value" o eixo das ordenadas. Use outro tema, por exemplo theme_few(), e aumente o tamanho do fonte das legendas
 
 \begin{figure}[hbt]
-\centering
-\includegraphics[width=.32\linewidth]{Figures/cape2_hilbert.png}
-\includegraphics[width=.32\linewidth]{Figures/forestGuatemala_hilbert.png}
-\includegraphics[width=.32\linewidth]{Figures/munich_hilbert.png}
-\caption{Análise da amplitude dos diferentes tipos de regiões: (a) Região Oceânica; (b) Regiões Florestais e (c) Regiões urbanas}
-\label{fig:AmplitudeSAR}
+	\centering
+	\includegraphics[scale = 0.5]{Figures/SAR_signal.pdf}
+    \caption{Análise da amplitude dos diferentes tipos de regiões: (a) Região Oceânica; (b) Regiões Florestais e (c) Regiões urbanas}
+    \label{fig:AmplitudeSAR}
 \end{figure}
 
 Após realizada a linearização das texturas por meio da curva de Hilbert, utilizamos a técnica de janela deslizante para obter nossos símbolos, logo:
@@ -224,13 +234,12 @@ Após realizada a linearização das texturas por meio da curva de Hilbert, util
 
 \begin{figure}[hbt]
 	\centering
-	\vspace{-0.5cm}
-	\includegraphics[scale = 0.6]{Figures/WATG.pdf}
-	\vspace{-2.5cm}
+	\includegraphics[scale = 0.45]{Figures/WATG.pdf}
     \caption{Processo metodológico aplicado na caracterização de regiões \texttt{SAR}.}
     \label{fig:WATG}
 \end{figure}
 %%% ACF Acrescente um ponto bem escandaloso no plano HC para que fique claro que a imagem vira um ponto. 
+%%% ETC Done
 
 Os resultados alcançados podem ser verificados na figura~\ref{fig:Regions}, onde testamos o poder do efeito da técnica sob diferentes valores de dimensão $m$ e delay $\tau$.
 Uma vez que tais valores nos informam características intrínsecas da dinâmica da série nos seus domínios específicos, valores inadequados poderão vir a ocultar esse tipo de conhecimento acerca dos dados, sendo essa etapa de análise extremamente crucial. 
