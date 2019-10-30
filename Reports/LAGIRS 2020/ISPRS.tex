@@ -13,6 +13,7 @@
 \usepackage{rotating}
 \usepackage{todonotes}
 \usepackage{lipsum}
+\usepackage{xcolor}
 
 \geometry{a4paper, top=25mm, left=20mm, right=20mm, bottom=25mm, headsep=10mm, footskip=12mm}
 
@@ -74,14 +75,21 @@
 	Markov random fields~\cite{Deng2005UnsupervisedSO}.
 	%%%\todo[inline]{Tem me incomodado o fato de algumas citações aparecerem sem a data da publicação. Isso ocorre em algumas referências, enquanto em outras a citação fica correta. Não consegui detectar erro no bib, será que isso é do estilo? Qual seria a lógica disso só ocorrer em algumas citações?} (RESOLVIDO)
 	
-	In our approach, we opt to linearize the image patches and analyze the 1-D signal as a time series. By doing that, we reduced the dimensionality of the data and mapped the spatial dependence to a temporal correlation. Then, we extracted ordinal patterns from the time series and proposed a weighted graph that is able to discriminate patterns correspondent to different amplitud
-	
+	{\color{red}
+		In our approach, we opt to linearize the image patches and analyze the resultant 1-D signals as time series. 
+		By doing that, we reduce the dimensionality of the data and map spatial dependence of pixels to temporal correlation. 
+		Then, we extract ordinal patterns from the time series and propose a novel weighted graph of pattern transitions that is able to discriminate patterns correspondent to different amplitude levels. 
+		We then, used well-known features from information theory to characterize the image patches. 
+		
+		The main contribution of this work is the proposal of a novel technique for SAR image texture characterization that is based on a modified version of ordinal pattern transition graphs, which is able to discriminate similar patterns with different amplitude levels. 
+		Our approach yields to interesting characterization of several types of textures as shown in experiments with real data achieving satisfactory levels of separability.
+	}
 	% We opted to linearize the image patches over a time series, reducing the dimensionality of the data and conserving the spatial correlation information of the pixels, converting them to weighted graphs and finally extracting theoretical resources from the information.
 	
-	We intend, through the weighted amplitude transition graph, to model the amplitude difference of the different classes of regions in the probability distribution of our data.
-	With this approach, we get discrimination between different types of goals.
+	% We intend, through the weighted amplitude transition graph, to model the amplitude difference of the different classes of regions in the probability distribution of our data.
+	% With this approach, we get discrimination between different types of goals.
 	
-	\todo[inline]{Ainda não gostei dos parágrafos acima}
+	\todo[inline]{Ainda não gostei dos parágrafos acima, vê se o texto em vermelho ficou melhor}
 	%%%\todo[inline]{Achei esse parágrafo acima ruim. Não há indicativo do motivo da escolha por linerização da imagem e o adjetivo ``good'' não quer dizer muita coisa.} (RESOLVIDO)
 	
 	
@@ -105,12 +113,12 @@
 		\item\label{item:Probability} obtaining a probability distribution function from this graph;
 		\item\label{item:Descriptors} computing the Entropy and Statistical Complexity of this distribution.
 	\end{enumerate}
-	The technique is illustrated in Fig~\ref{fig:WATG}, and detailed in the following.
+	The technique is illustrated in Figure~\ref{fig:WATG}, and detailed in the following.
 	
 	\begin{figure*}[hbt]
 		\centering
 		\includegraphics[scale = 0.5]{Figures/WATG.pdf}
-		\caption{Outline of the tecnique for the characterization of textures.}
+		\caption{Outline of the technique for the characterization of textures.}
 		\label{fig:WATG}
 	\end{figure*}
 	
@@ -137,11 +145,9 @@
 	As can also be seen, the Definition~\ref{def:CurveFilling} imposes that each pixel is visited only once.
 	%%%\todo[inline]{impose on us? Achei essa frase estranha. Eu reescreveria como: the Definition 1 imposes that each pixel is visited only once.} (RESOLVIDO)
 	
-	A Hilbert curve is a continuous fractal space fill curve described as a variant of Peano space fill curves.
-	Such a curve scans an array of pixels with a size of $2^m \times 2^m$ pixels without ever maintaining the same direction for more than three consecutive points, so that each pixel in a grid is traversed once and only once, as illustrated in Fig~\ref{fig:Hilbert}.
+	This curve scans an array of pixels of dimension $2^k \times 2^k$, where $k \in \mathbb{N}$, never keeping the same direction for more than three consecutive points, so that each pixel in a grid is traversed only once, as shown in Figure~\ref{fig:Hilbert}.
 	Using the Hilbert curve, we can reduce the data dimensionality by maintaining the spatial dependence information of the analyzed textures.
-	%%%\todo[inline]{2m x 2m? não seria simplesmente 2x2? Outro ponto que talvez seja interessante é enfatizar a redução de dimensionalidade sem grandes prejuízos com relação à dependência espacial.} (RESOLVIDO)
-	\todo[inline]{a letra $m$ foi utilizada para designar a dimensão dos padrões ordinais nas seções seguintes. O que ela está desginando aqui? Precisa corrigir isso.}
+	%%%\todo[inline]{a letra $m$ foi utilizada para designar a dimensão dos padrões ordinais nas seções seguintes. O que ela está desginando aqui? Precisa corrigir isso.} (RESOLVIDO)
 	
 	\begin{figure}[hbt]
 		\centering
@@ -306,7 +312,7 @@
 	%Therefore, in this paper we aim to represent, through the weighted amplitude transition graph, to model this amplitude difference in the probability distribution of our data.
 	%The analysis methodology proposed and applied to the texture data set SAR can be seen in the figure~\ref{fig:WATG}.
 	
-	Fig.~\ref{fig:AmplitudeSAR} shows examples of forest, sea and urban samples as time series, after the linearization process.
+	Figure~\ref{fig:AmplitudeSAR} shows examples of forest, sea and urban samples as time series, after the linearization process.
 	
 	\begin{figure}[hbt]
 		\includegraphics[width=\columnwidth]{Figures/SAR_signal.pdf}
@@ -319,14 +325,14 @@
 	%\mathbb{X}_t^{m,\tau} = (x_{t}, x_{t+\tau},\ldots, x_{t+(m-2)\tau} ,x_{t+(m-1)\tau}).
 	%\end{equation}
 	
-	As we can see in Fig~\ref{fig:D3T1}, when we apply small delay and dimension values (the best result was obtained when $m = 3$ and $\tau = 1$) with WATG, in urban region data, we obtained a probability distribution with few extreme values, representing the transitions of the maximum values of the series.
+	As we can see in Figure~\ref{fig:D3T1}, when we apply small delay and dimension values (the best result was obtained when $m = 3$ and $\tau = 1$) with WATG, in urban region data, we obtained a probability distribution with few extreme values, representing the transitions of the maximum values of the series.
 	On the other hand, oceanic and forest regions have as their main discriminating descriptor the statistical complexity that portrays the degree of temporal dependence structure between the symbols and consequently between the pixel intensity values.
 	%%%\todo[inline]{Achei essa primeira sentença do parágrafo anterior (até WATG) confusa. Não entendi o que é low incorporation e a parte ``as sliding window parameters'' não faz sentido para mim.} (RESOLVIDO)
 	
-	Fig.~\ref{fig:Regions} shows the results for several dimension values $m$ and delays $\tau$.
+	Figure~\ref{fig:Regions} shows the results for several dimension values $m$ and delays $\tau$.
 	Since such values inform us of intrinsic characteristics of the dynamics of the series in their specific domains, inadequate values may hide this kind of knowledge about the data, and this analysis step is extremely crucial.
 	
-	As shown in Fig.~\ref{fig:Regions} class discrimination decreases with $\tau$, which means that there is a loss of effect of the peak values found in the series.
+	As shown in Figure~\ref{fig:Regions} class discrimination decreases with $\tau$, which means that there is a loss of effect of the peak values found in the series.
 	As WATG captures amplitude differences between different time series, when the values of the $\tau$ scale increase, well-distributed weight plots are formed, thus obtaining increasing entropy values.
 	On the other hand, as we increase $m$, the granularity of the information increases, capturing more spatial dependence structures in the data, and, consequently, acquiring greater statistical complexity.
 	\todo[inline]{Tente dar uma noção do que ficou melhor nos seus estudos em termos de  $m$ e $\tau$ para chegarmos a uma conclusão}
@@ -360,6 +366,7 @@
 	As a result, in addition to perfectly separating urban areas from the others analyzed by entropy values, we are still able to differentiate oceanic and forest areas through their different values of statistical complexity, which informs us of the degree of temporal dependence between their elements.
 	
 	\bibliographystyle{isprs}
+	%\bibliography{ISPRS.bib}
 	\bibliography{../../Common/references.bib}
 	
 	\section*{ACKNOWLEDGEMENTS}\label{ACKNOWLEDGEMENTS}
