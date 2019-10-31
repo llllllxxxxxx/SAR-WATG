@@ -275,34 +275,35 @@ Thus, series with uniform amplitudes have edges with probability of occurrence w
 
 Entropy measures the disorder or unpredictability of a system characterized by a probability measure $\mathbb{P}$.
 
-Let $\mathbb{P} = \{p_{(\pi_1, \pi_1)}, p_{(\pi_1, \pi_2)}, \dots, p_{(\pi_{D!}, \Pi_{D!})} \}$ be the probability distribution taken from the time series weighted amplitude transition graph $\mathbb{X}$.
-The Shannon entropy is given by:	
+Let $\mathbb{P} = \{p_{(\widetilde\pi^D_1, \widetilde\pi^D_1)}, p_{(\widetilde\pi^D_1, \widetilde\pi^D_2)}, \dots, p_{(\widetilde\pi^D_{D!}, \widetilde\pi^D_{D!})} \} = \{p_1,\dots,p_{D!^2}\}$ be the probability distribution taken from the time series weighted amplitude transition graph $\mathbb{X}$.
+The normalized Shannon entropy is given by:	
 \begin{equation}
-H(\mathbb{P}) = -\sum_{i=1}^{D!D!} p_i \log p_i .
+H(\mathbb{P}) = -\frac1{2\log D!}\sum_{\ell=1}^{D!^2} p_{\ell} \log p_{\ell} .
 \label{eq:Entropia}
 \end{equation}
 
 The ability of the entropy to capture system properties is limited, so it is necessary to use it in conjunction with other des\-criptors to perform a more complete analysis.
 Other interesting measures are distances between the $\mathbb{P}$ probability function and a probability measure that describes a non-informative process, typically the uniform distribution.
 
-The Jensen-Shannon distance to the uniform distribution $\mathbb{U} = (\frac{1}{m!m!}, \dots, \frac{1}{m!m!})$ is a measure of how similar the underlying dynamics are to a process without information; it is calculated as:
+The Jensen-Shannon distance to the uniform distribution $\mathbb{U} = (\frac{1}{D!^2}, \dots, \frac{1}{D!^2})$ is a measure of how similar the underlying dynamics are to a process without information; it is calculated as:
 \begin{equation}
-D(\mathbb{P}, \mathbb{U}) = \sum_{i=1}^{D!D!} \Big(p_i \log\frac{p_i}{u_i} +
-u_i \log\frac{u_i}{p_i}
+Q'(\mathbb{P}, \mathbb{U}) = \sum_{\ell=1}^{D!^2} \Big(p_\ell \log\frac{p_\ell}{u_\ell} +
+u_\ell \log\frac{u_\ell}{p_\ell}
 \Big).
 \end{equation}
 This quantity is also called ``disequilibrium.''
+The normalized disequilibrium is $ Q=Q'/\max\{Q'\}$.
 
 Conversely to entropy, statistical complexity seeks to find interaction and dependence structures among the elements of a given series, being an extremely important factor in the study of dynamic systems.
 
 This quantity is defined using the expression given by~\cite{Lopez1995statistical}, 
 that combines an Entropy and a Distance, yielding the Statistical Complexity~\cite{Feldman2008information,Feldman1998Statistical}:
 \begin{equation}
-C(\mathbb{P}, \mathbb{U}) = H(\mathbb{P}) D(\mathbb{P}, \mathbb{U}).
+C(\mathbb{P}, \mathbb{U}) = H(\mathbb{P}) Q(\mathbb{P}, \mathbb{U}).
 \end{equation}
 
 In our analysis, each time series can then be described by a point $(H(\mathbb{P}), C(\mathbb{P}, \mathbb{U}))$.
-The set of all pairs $(H(\mathbb{P}), C(\mathbb{P}, \mathbb{U}))$ for any time series described by patterns of length $m$ lies in a compact subset of $\mathbbm R^2$: the Entropy-Complexity plane. 
+The set of all pairs $(H(\mathbb{P}), C(\mathbb{P}, \mathbb{U}))$ for any time series described by patterns of length $D$ lies in a compact subset of $\mathbbm R^2$: the Entropy-Complexity plane. 
 
 Through such a tool it is possible to discover the nature of the series, determining if it corresponds to a chaotic (or other deterministic dynamics) or stochastic sequences.
 
