@@ -113,7 +113,7 @@ HC.color.shape.signal <- function(color.signal, shape.signal, signal.values){
   signal.values <- data.frame("H" = signal.values[,1], "C" = signal.values[,2], "Color" = Color, "Shape" = Shape, "Texture" = Texture)
   
   p = ggplot(signal.values, aes(x = signal.values$H, y = signal.values$C)) +
-    geom_point(shape = signal.values$Shape, color = signal.values$Color, size = 3) + 
+    geom_point(shape = signal.values$Shape, color = signal.values$Color, size = 1) + 
     labs(x="", y="") + 
     theme_few(base_size = 18, base_family = "serif")  + theme(plot.title = element_text(hjust=0.5)) + 
     scale_colour_few("Dark")

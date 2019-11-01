@@ -17,8 +17,8 @@ require(ggthemes)
 require(igraph)
 require(ggpubr)
 source("SAR_TimeSerie.R")
-#source("../Theory_Information.R")
-source("Theory_Information.R")
+source("../Theory_Information.R")
+#source("Theory_Information.R")
 
 ############################### Transition graphs functions ############################################
 
@@ -88,10 +88,14 @@ transition.graph <- function(elements, wedding, D){
 
 ###################################### Function of Plot ##############################################
 
-HC.color.shape.signal <- function(color.signal, shape.signal, signal.values){
+HC.color.shape.signal <- function(dimension, color.signal, shape.signal, signal.values){
   
   shape.select <- c(17,18,19,8)
-  
+  XMIN = min(signal.values[,1]) + 0.0005
+  XMAX = min(max(signal.values[,1]) + 0.0005, 1)
+  YMIN = max(0,min(signal.values[,2]) - 0.05)
+  YMAX = max(signal.values[,2]) + 0.05
+      
   # Paleta montada a partir de https://coolors.co/
   rainbow.colors <- palette(c("#494947", #DarkGreen
                               "#7494EA", #MutedDarkBlue
@@ -111,15 +115,14 @@ HC.color.shape.signal <- function(color.signal, shape.signal, signal.values){
   Shape = shape.select[shape.signal]
   Texture = color.signal
   signal.values <- data.frame("H" = signal.values[,1], "C" = signal.values[,2], "Color" = Color, "Shape" = Shape, "Texture" = Texture)
-  
-  p = ggplot(signal.values, aes(x = signal.values$H, y = signal.values$C)) +
-    geom_point(shape = signal.values$Shape, color = signal.values$Color, size = 1) + 
-    labs(x="", y="") + 
+  p = cotas(dimension)
+  p = p + 
+    geom_point(aes(x = signal.values$H, y = signal.values$C), shape = signal.values$Shape, color = signal.values$Color, size = 1) +
+    labs(x="", y="") + xlim(limits=c(XMIN, XMAX)) + ylim(limits=c(YMIN, YMAX)) + 
     theme_few(base_size = 18, base_family = "serif")  + theme(plot.title = element_text(hjust=0.5)) + 
     scale_colour_few("Dark")
   return(p)
 } 
-
 
 ###################################### Image Sample Parameters #######################################
 
@@ -194,12 +197,13 @@ plot.transition.graph.analysis <- function(){
   hilbertcurve <- unlist(read.table("../../Data/Hilbert/HilbertCurves128.txt")) + 1
   types <- c(rep(1,40), rep(2,40), rep(3,40), rep(4, 40))
   regions <- c(rep(1,40), rep(2,80), rep(4, 40))
-  
+  n.total = 160
   
   Entropy.Complexity.csv <-read.csv(file="EntropyComplexity.csv", header=TRUE, sep=",")
   
   
   for(i in 1:(length(n)*length(tal))){
+    
     cat("- Plane: ", i, "de 20 ", "\n")
     if(i%%5 == 1){
       a = a + 1
@@ -212,7 +216,7 @@ plot.transition.graph.analysis <- function(){
     Entropy.Complexity[,1] = Entropy.Complexity.csv[((n.total*(i-1))+1):(n.total*i),2]
     Entropy.Complexity[,2] = Entropy.Complexity.csv[((n.total*(i-1))+1):(n.total*i),3]
     
-    plots[[i]] = HC.color.shape.signal(regions, types, Entropy.Complexity)
+    plots[[i]] = HC.color.shape.signal(factorial(n[a])^2,regions, types, Entropy.Complexity)
   }
   
   png("transitionGraphHilbert.png", width = 1500, height = 850)
