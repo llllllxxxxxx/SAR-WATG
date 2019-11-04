@@ -16,9 +16,10 @@ require(ggplot2)
 require(ggthemes)
 require(igraph)
 require(ggpubr)
+require(class)
 source("SAR_TimeSerie.R")
-#source("../Theory_Information.R")
-source("Theory_Information.R")
+source("../Theory_Information.R")
+#source("Theory_Information.R")
 
 ############################### Transition graphs functions ############################################
 
@@ -196,14 +197,32 @@ plot.transition.graph.knn <- function(){
   
   Entropy.Complexity.csv <-read.csv(file="EntropyComplexity.csv", header=TRUE, sep=",")
   
+  Entropy.Complexity <- matrix(nrow = n.total, ncol = 3)
   
-  Entropy.Complexity <- matrix(nrow = n.total, ncol = 2)
+  Entropy.Complexity[,1] = Entropy.Complexity.csv[1:n.total,2]
+  Entropy.Complexity[,2] = Entropy.Complexity.csv[1:n.total,3]
   
-  Entropy.Complexity[,1] = Entropy.Complexity.csv[((n.total*(i-1))+1):(n.total*i),2]
-  Entropy.Complexity[,2] = Entropy.Complexity.csv[((n.total*(i-1))+1):(n.total*i),3]
-    
-  plot = HC.color.shape.signal(regions, types, Entropy.Complexity)
+  #Diferent classes
+  Entropy.Complexity[1:80, 3] = 1      #Guatemala
+  Entropy.Complexity[81:120, 3] = 2     #Canaveral
+  Entropy.Complexity[121:160, 3] = 3    #Munich
   
+  ##Generate a random number that is 95% of the total number of rows in dataset
+  ran <- sample(1:nrow(Entropy.Complexity), 0.95*nrow(Entropy.Complexity))
+  HC.train <- Entropy.Complexity[ran,1:2] 
+  HC.test <- Entropy.Complexity[-ran,1:2]  
+  HC.target.category <- Entropy.Complexity[ran,3]
+  HC.test.category <- Entropy.Complexity[-ran,3]
+  
+  ##run knn function
+  pr <- knn(HC.train, HC.test, cl = HC.target.category, k = 3)
+  
+  ##create confusion matrix
+  tab <- table(pr, HC.test.category)
+  
+  ##this function divides the correct predictions by total number of predictions that tell us how accurate teh model is.
+  accuracy <- function(x){sum(diag(x)/(sum(rowSums(x)))) * 100}
+  accuracy(tab)
 }
 
 plot.transition.graph.knn()
