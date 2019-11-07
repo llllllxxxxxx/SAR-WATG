@@ -208,6 +208,9 @@ plot.transition.graph.knn <- function(){
   Entropy.Complexity[81:120, 3] = 2     #Canaveral
   Entropy.Complexity[121:160, 3] = 3    #Munich
   
+  HCdata = Entropy.Complexity[,1:2]
+  HCclasses = Entropy.Complexity[,3]
+  
   
   Entropy.Complexity = data.frame("H" = Entropy.Complexity[,1], "C" = Entropy.Complexity[,2], "Regions" = Entropy.Complexity[,3])
   
@@ -215,11 +218,27 @@ plot.transition.graph.knn <- function(){
   
   fit <- train( Regions ~ .,
                 method     = "knn",
-                tuneGrid   = expand.grid(k = 1:15),
+                tuneGrid   = expand.grid(k = 1:10),
                 trControl  = trControl,
-               # metric     = "Accuracy",
+                metric     = "Accuracy",
                 data       = Entropy.Complexity )
-  fit
+  
+  ##Generate a random number that is 95% of the total number of rows in dataset
+  ran <- sample(1:nrow(Entropy.Complexity), 0.95*nrow(Entropy.Complexity))
+  HC.train <- Entropy.Complexity[ran,1:2] 
+  HC.test <- Entropy.Complexity[-ran,1:2]  
+  HC.target.category <- Entropy.Complexity[ran,3]
+  HC.test.category <- Entropy.Complexity[-ran,3]
+  
+  ##run knn function
+  pr <- knn(HC.train, HC.test, cl = HC.target.category, k = 3)
+  
+  ##create confusion matrix
+  tab <- table(pr, HC.test.category)
+  
+  ##this function divides the correct predictions by total number of predictions that tell us how accurate teh model is.
+  accuracy <- function(x){sum(diag(x)/(sum(rowSums(x)))) * 100}
+  accuracy(tab)
 }
 
 plot.transition.graph.knn()
