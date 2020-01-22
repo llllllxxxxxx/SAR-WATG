@@ -1,4 +1,4 @@
-library("png")
+if(!require(png)) install.packages("png")
 
 fill_matrix <- function(file_HHHH, nrow, ncol) {
   

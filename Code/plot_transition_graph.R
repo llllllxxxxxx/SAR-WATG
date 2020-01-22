@@ -11,16 +11,12 @@
 
 ############################################# Packages #################################################
 
-require(gtools)
-require(ggplot2)
-require(ggthemes)
-require(igraph)
-require(ggpubr)
-require(class)
-require(caret)
-source("SAR_TimeSerie.R")
-source("../Theory_Information.R")
-#source("Theory_Information.R")
+if(!require(gtools)) install.packages("gtools")
+if(!require(ggplot2)) install.packages("ggplot2")
+if(!require(ggthemes)) install.packages("ggthemes")
+if(!require(igraph)) install.packages("igraph")
+if(!require(ggpubr)) install.packages("ggpubr")
+source("Theory_Information.R")
 
 ############################### Transition graphs functions ############################################
 
@@ -90,10 +86,14 @@ transition.graph <- function(elements, wedding, D){
 
 ###################################### Function of Plot ##############################################
 
-HC.color.shape.signal <- function(color.signal, shape.signal, signal.values){
+HC.color.shape.signal <- function(dimension, color.signal, shape.signal, signal.values){
   
   shape.select <- c(17,18,19,8)
-  
+  XMIN = min(signal.values[,1]) + 0.0005
+  XMAX = min(max(signal.values[,1]) + 0.0005, 1)
+  YMIN = max(0,min(signal.values[,2]) - 0.05)
+  YMAX = max(signal.values[,2]) + 0.05
+      
   # Paleta montada a partir de https://coolors.co/
   rainbow.colors <- palette(c("#494947", #DarkGreen
                               "#7494EA", #MutedDarkBlue
@@ -113,15 +113,14 @@ HC.color.shape.signal <- function(color.signal, shape.signal, signal.values){
   Shape = shape.select[shape.signal]
   Texture = color.signal
   signal.values <- data.frame("H" = signal.values[,1], "C" = signal.values[,2], "Color" = Color, "Shape" = Shape, "Texture" = Texture)
-  
-  p = ggplot(signal.values, aes(x = signal.values$H, y = signal.values$C)) +
-    geom_point(shape = signal.values$Shape, color = signal.values$Color, size = 1) + 
-    labs(x="", y="") + 
+  p = cotas(dimension)
+  p = p + 
+    geom_point(aes(x = signal.values$H, y = signal.values$C), shape = signal.values$Shape, color = signal.values$Color, size = 1) +
+    labs(x="", y="") + xlim(limits=c(XMIN, XMAX)) + ylim(limits=c(YMIN, YMAX)) + 
     theme_few(base_size = 18, base_family = "serif")  + theme(plot.title = element_text(hjust=0.5)) + 
     scale_colour_few("Dark")
   return(p)
 } 
-
 
 ###################################### Image Sample Parameters #######################################
 
@@ -187,58 +186,52 @@ dimen.guatemala[38:40,] <- c(row4[1:3], rep(128, 3), rep(cols[5], 3), rep(128, 3
 
 ###################################### Function of Analysis ##########################################
 
-plot.transition.graph.knn <- function(){
+plot.transition.graph.analysis <- function(){
   
-  n = 3 #Dimension parameter
-  tal = 1 #Delay parameter
+  a = b = 0
+  n = c(3,4,5,6) #Dimension parameter
+  tal = c(1,2,3,4,5) #Delay parameter
+  plots = array(list(), 20)
   hilbertcurve <- unlist(read.table("../../Data/Hilbert/HilbertCurves128.txt")) + 1
   types <- c(rep(1,40), rep(2,40), rep(3,40), rep(4, 40))
   regions <- c(rep(1,40), rep(2,80), rep(4, 40))
+  n.total = 160
+  
+  Entropy.Complexity.csv <-read.csv(file="../../Data/EntropyComplexity.csv", header=TRUE, sep=",")
   
   
-  Entropy.Complexity.csv <-read.csv(file="EntropyComplexity.csv", header=TRUE, sep=",")
+  for(i in 1:(length(n)*length(tal))){
+    
+    cat("- Plane: ", i, "de 20 ", "\n")
+    if(i%%5 == 1){
+      a = a + 1
+      b = 0
+    }
+    b = b + 1
+    
+    Entropy.Complexity <- matrix(nrow = n.total, ncol = 2)
+    
+    Entropy.Complexity[,1] = Entropy.Complexity.csv[((n.total*(i-1))+1):(n.total*i),2]
+    Entropy.Complexity[,2] = Entropy.Complexity.csv[((n.total*(i-1))+1):(n.total*i),3]
+    
+    plots[[i]] = HC.color.shape.signal(factorial(n[a])^2,regions, types, Entropy.Complexity)
+  }
   
-  Entropy.Complexity <- matrix(nrow = n.total, ncol = 3)
+  png("transitionGraphHilbert.png", width = 1500, height = 850)
   
-  Entropy.Complexity[,1] = Entropy.Complexity.csv[1:n.total,2]
-  Entropy.Complexity[,2] = Entropy.Complexity.csv[1:n.total,3]
+  p = ggarrange(plots[[1]], plots[[2]], plots[[3]], plots[[4]], plots[[5]],
+                plots[[6]], plots[[7]], plots[[8]], plots[[9]], plots[[10]],
+                plots[[11]], plots[[12]], plots[[13]], plots[[14]], plots[[15]],
+                plots[[16]], plots[[17]], plots[[18]], plots[[19]], plots[[20]],
+                ncol=5, nrow=4, common.legend = TRUE, legend = "right") + 
+    ggtitle(expression(italic("SAR Images - Transition Graph - Sliding Window"))) +
+    xlab(expression(italic(H))) + ylab(expression(italic(C))) + labs(colour=expression(italic(Regions))) +
+    theme_igray() + theme(text=element_text(size=14, family="Times New Roman"), axis.text.x=element_blank(), axis.text.y=element_blank(),plot.title = element_text(hjust=0.5)) + 
+    guides(colour = guide_legend(override.aes = list(size=3)))
   
-  #Diferent classes
-  Entropy.Complexity[1:80, 3] = 1      #Guatemala
-  Entropy.Complexity[81:120, 3] = 2     #Canaveral
-  Entropy.Complexity[121:160, 3] = 3    #Munich
+  print(p)
+  dev.off()
   
-  HCdata = Entropy.Complexity[,1:2]
-  HCclasses = Entropy.Complexity[,3]
-  
-  
-  Entropy.Complexity = data.frame("H" = Entropy.Complexity[,1], "C" = Entropy.Complexity[,2], "Regions" = Entropy.Complexity[,3])
-  
-  trControl <- trainControl(method  = "cv", number  = 5)
-  
-  fit <- train( Regions ~ .,
-                method     = "knn",
-                tuneGrid   = expand.grid(k = 1:10),
-                trControl  = trControl,
-                metric     = "Accuracy",
-                data       = Entropy.Complexity )
-  
-  ##Generate a random number that is 95% of the total number of rows in dataset
-  ran <- sample(1:nrow(Entropy.Complexity), 0.95*nrow(Entropy.Complexity))
-  HC.train <- Entropy.Complexity[ran,1:2] 
-  HC.test <- Entropy.Complexity[-ran,1:2]  
-  HC.target.category <- Entropy.Complexity[ran,3]
-  HC.test.category <- Entropy.Complexity[-ran,3]
-  
-  ##run knn function
-  pr <- knn(HC.train, HC.test, cl = HC.target.category, k = 3)
-  
-  ##create confusion matrix
-  tab <- table(pr, HC.test.category)
-  
-  ##this function divides the correct predictions by total number of predictions that tell us how accurate teh model is.
-  accuracy <- function(x){sum(diag(x)/(sum(rowSums(x)))) * 100}
-  accuracy(tab)
 }
 
-plot.transition.graph.knn()
+plot.transition.graph.analysis()

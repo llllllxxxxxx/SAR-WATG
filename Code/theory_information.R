@@ -8,31 +8,8 @@
 # Contact: eduarda.chagas@dcc.ufmg.br
 ####################################################################################
 
-require(ggplot2)
-require(ggthemes)
-
-Entropy.Complexity.Points <- function(probabilities, ns, dimension){
-  C <- H <-rep(0,ns)
-  fact <- factorial(dimension)
-  for(i in c(1:ns)){
-    H[i] = shannonNormalized(probabilities[i,1:fact])
-    C[i] = Ccomplexity(probabilities[i,1:fact])
-  }
-  Entropy.Complexity <- data.frame(H, C)
-  return(Entropy.Complexity)
-}
-
-Entropy.Complexity.Fisher.Points <- function(probabilities, ns, dimension){
-  C <- H <- Fs<-rep(0,ns)
-  fact <- factorial(dimension)
-  for(i in c(1:ns)){
-    H[i] = shannonNormalized(probabilities[i,1:fact])
-    C[i] = Ccomplexity(probabilities[i,1:fact])
-    Fs[i] = fis(probabilities[i,1:fact])
-  }
-  Entropy.Complexity.Fisher <- data.frame(H, Fs, C)
-  return(Entropy.Complexity.Fisher)
-}
+if(!require(ggplot2)) install.packages("ggplot2")
+if(!require(ggthemes)) install.packages("ggthemes")
 
 shannonEntropy <- function(p){
   h <- p * log(p)
@@ -41,7 +18,9 @@ shannonEntropy <- function(p){
 }
 
 shannonNormalized <- function(p){
-  return(shannonEntropy(p)/log(length(p)))
+  h = (shannonEntropy(p)/log(length(p)))
+  h[is.nan(h)] <- 0
+  return(h)
 }
 
 jensenDivergence<-function(p){
@@ -79,11 +58,6 @@ cotas <- function(dimension){
     geom_line(aes(x=c1x, c1y), size=0.5, color="gray")
   return(p)
 }
-
-HCPlane <- function(Entropy.Complexity){
-  p = ggplot(Entropy.Complexity, aes(x = H, y = C, label = Texture))+theme(plot.title = element_text(hjust=0.5))+geom_point(size=2)+geom_text(check_overlap = TRUE, hjust = 0, nudge_x = 0.0015, size = 2) 
-  return(p)
-} 
 
 readingMPR<-function(dimension,option=0){
   if(dimension == 3){ 
@@ -127,34 +101,3 @@ readingMPR<-function(dimension,option=0){
   curva2y = read.table(trozo, stringsAsFactors=FALSE, fileEncoding="latin1")[,2]
   if(option==4) return(curva2y)
 }
-
-HCPlane.Classes <- function(probability, dimension, Entropy.Complexity){
-  Color <- Shape <-rep(0,dim(probability)[1])
-  shape.select <- c(17,18,19,8)
-  
-  # Paleta montada a partir de https://coolors.co/
-  rainbow.colors <- palette(c("#494947", #DarkGreen
-                              "#7494EA", #MutedDarkBlue
-                              "#B14AED", #Violet
-                              "#44CCFF", #BrightLightBlue
-                              "#35FF69", #BrightGreen
-                              "#ED8438", #Orange
-                              "#E7AD99", #Pink
-                              "#C18C5D", #LightBrown
-                              "#BF6F00", #DarkYellow
-                              "#FB4D3D", #BrightRed
-                              "#495867", #DarkGray
-                              "#98CE00", #SHEEN GREEN
-                              "#98838F")) #MOUNTBATTEN PINK
-  
-  Color = rainbow.colors[probability[,factorial(dimension) + 1]]
-  Shape = shape.select[probability[,factorial(dimension) + 2]]
-  Texture = probability[,factorial(dimension) + 1]
-  Entropy.Complexity <- data.frame("H" = Entropy.Complexity$H, "C" = Entropy.Complexity$C, "Color" = Color, "Shape" = Shape, "Texture" = Texture)
-  p = cotas(dimension)
-  p = p + 
-    geom_point(aes(x = Entropy.Complexity$H, y = Entropy.Complexity$C), shape = Entropy.Complexity$Shape, color = Entropy.Complexity$Color, size = 1) +
-    theme(plot.title = element_text(hjust=0.5)) 
-  #geom_text(check_overlap = TRUE, hjust = 0, nudge_x = 0.0015, size = 2) 
-  return(p)
-} 

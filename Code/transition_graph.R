@@ -1,27 +1,37 @@
 ########################################################################################################
-# Transition_graph_BP.R
+# Transition_graph.R
 #
 # Analysis of SAR images using Hilbert space-filling curves and ordinal patterns transition graphs
-# (BP modification)
+# (sliding window)
 #
 # Author: Eduarda Chagas
-# Date : Sep 2019
+# Date : Oct 2019
 # Contact: eduarda-chagas@ufmg.br
 ########################################################################################################
 
 ############################################# Packages #################################################
 
-require(gtools)
-require(ggplot2)
-require(ggthemes)
-require(igraph)
-require(ggpubr)
-source("SAR_TimeSerie.R")
-source("../Formation_patterns.R")
-#source("../Theory_Information.R")
+if(!require(gtools)) install.packages("gtools")
+if(!require(ggplot2)) install.packages("ggplot2")
+if(!require(ggthemes)) install.packages("ggthemes")
+if(!require(igraph)) install.packages("igraph")
+if(!require(ggpubr)) install.packages("ggpubr")
 source("Theory_Information.R")
 
 ############################### Transition graphs functions ############################################
+
+sliding.window <- function(series, dimension, delay){
+  i = j = 1
+  n = length(series)
+  elements = matrix(nrow = n-(dimension-1)*delay, ncol = dimension)
+  s = seq(0, (0 + (dimension - 1)*delay), by = delay)
+  while(i+((dimension-1)*delay) <= length(series)){
+    elements[j,] = series[s + i]
+    i = i + 1
+    j = j + 1
+  }
+  elements
+}
 
 formation.pattern <- function(elements){
   patterns = matrix(nrow = dim(elements)[1], ncol = dim(elements)[2])
@@ -31,6 +41,7 @@ formation.pattern <- function(elements){
   }
   patterns
 }
+
 
 define.symbols<-function(dimension){
   d = c(1:dimension)
@@ -66,11 +77,8 @@ transition.graph <- function(elements, wedding, D){
   for(i in 1:(m-1)){
     weight.i1 = (max(elements[i,]) - min(elements[i,]))
     weight.i2 = (max(elements[i+1,]) - min(elements[i+1,]))
-    #cat(max(elements[i,]), " ", min(elements[i,]), " ", i, "\n")
-    #cat(max(elements[i+1,]), " ", min(elements[i+1,])," ", i+1, "\n")
     graph[wedding[i],wedding[i+1]] = graph[wedding[i],wedding[i+1]] + abs(weight.i1 - weight.i2)
     weight.total = weight.total + abs(weight.i1 - weight.i2)
-    #weight.total = weight.total + 1
   }
   graph = graph/weight.total
   graph
@@ -104,8 +112,12 @@ HC.color.shape.signal <- function(color.signal, shape.signal, signal.values){
   
   p = ggplot(signal.values, aes(x = signal.values$H, y = signal.values$C)) +
     geom_point(shape = signal.values$Shape, color = signal.values$Color, size = 1) + 
-    theme(plot.title = element_text(hjust=0.5))
+    labs(x="", y="") + 
+    theme_few(base_size = 18, base_family = "serif")  + theme(plot.title = element_text(hjust=0.5)) + 
+    scale_colour_few("Dark")
   return(p)
+  33
+  - `Band&Pompe.R`- 
 } 
 
 
@@ -120,6 +132,7 @@ ns.canaveral.behavior2 = 40
 dimen.canaveral.behavior2 <- matrix(nrow = ns.canaveral.behavior2, ncol = 4)
 ns.munich = 40
 dimen.munich <- matrix(nrow = ns.munich, ncol = 4)
+n.total = (ns.guatemala + ns.canaveral.behavior1 + ns.canaveral.behavior2 + ns.munich)
 
 #The SAR data is available on https://drive.google.com/file/d/1jtbOcYwQfysfcUp4UhoA7lSl4_tPIqfa/view?usp=sharing and
 # correspond to HHHH band of an image taken from the Cape Canaveral (acquired Sep 22, 2016)
@@ -172,7 +185,7 @@ dimen.guatemala[38:40,] <- c(row4[1:3], rep(128, 3), rep(cols[5], 3), rep(128, 3
 
 ###################################### Function of Analysis ##########################################
 
-transition.BP.graph.analysis <- function(){
+transition.graph.analysis <- function(){
   
   a = b = 0
   n = c(3,4,5,6) #Dimension parameter
@@ -189,13 +202,15 @@ transition.BP.graph.analysis <- function(){
       b = 0
     }
     b = b + 1
-    Entropy.Complexity <- matrix(0, nrow = (ns.guatemala + ns.canaveral.behavior1 + ns.canaveral.behavior2 + ns.munich), ncol = 2)
-    #GUatemala
+    
+    Entropy.Complexity <- matrix(nrow = n.total, ncol = 2)
+    
+    #Guatemala
     sar_data <- raster(paste("../../Data/", "guatemala", "/HHHH", ".grd", sep = ""))
     for(j in c(1:ns.guatemala)){
       img <- getValuesBlock(sar_data, row = dimen.guatemala[j,1], nrows = dimen.guatemala[j,2], col = dimen.guatemala[j,3], ncols = dimen.guatemala[j,4], format = "matrix")
-      img = img/max(img)
-      e = formationPatternsTexturesHilbert(img, n[a], tal[b])
+      ts = img[hilbertcurve]/max(img[hilbertcurve])
+      e = sliding.window(ts, n[a], tal[b])
       p = formation.pattern(e)
       w = pattern.wedding(p)
       g = transition.graph(e, w, n[a])
@@ -207,8 +222,8 @@ transition.BP.graph.analysis <- function(){
     sar_data <- raster(paste("../../Data/", "cape", "/HHHH", ".grd", sep = ""))
     for(j in c(1:ns.canaveral.behavior1)){
       img <- getValuesBlock(sar_data, row = dimen.canaveral.behavior1[j,1], nrows = dimen.canaveral.behavior1[j,2], col = dimen.canaveral.behavior1[j,3], ncols = dimen.canaveral.behavior1[j,4], format = "matrix")
-      img = img/max(img)
-      e = formationPatternsTexturesHilbert(img, n[a], tal[b])
+      ts = img[hilbertcurve]/max(img[hilbertcurve])
+      e = sliding.window(ts, n[a], tal[b])
       p = formation.pattern(e)
       w = pattern.wedding(p)
       g = transition.graph(e, w, n[a])
@@ -220,8 +235,8 @@ transition.BP.graph.analysis <- function(){
     sar_data <- raster(paste("../../Data/", "cape", "/HHHH", ".grd", sep = ""))
     for(j in c(1:ns.canaveral.behavior2)){
       img <- getValuesBlock(sar_data, row = dimen.canaveral.behavior2[j,1], nrows = dimen.canaveral.behavior2[j,2], col = dimen.canaveral.behavior2[j,3], ncols = dimen.canaveral.behavior2[j,4], format = "matrix")
-      img = img/max(img)
-      e = formationPatternsTexturesHilbert(img, n[a], tal[b])
+      ts = img[hilbertcurve]/max(img[hilbertcurve])
+      e = sliding.window(ts, n[a], tal[b])
       p = formation.pattern(e)
       w = pattern.wedding(p)
       g = transition.graph(e, w, n[a])
@@ -233,8 +248,8 @@ transition.BP.graph.analysis <- function(){
     sar_data <- raster(paste("../../Data/", "munich", "/HHHH", ".grd", sep = ""))
     for(j in c(1:ns.munich)){
       img <- getValuesBlock(sar_data, row = dimen.munich[j,1], nrows = dimen.munich[j,2], col = dimen.munich[j,3], ncols = dimen.munich[j,4], format = "matrix")
-      img = img/max(img)
-      e = formationPatternsTexturesHilbert(img, n[a], tal[b])
+      ts = img[hilbertcurve]/max(img[hilbertcurve])
+      e = sliding.window(ts, n[a], tal[b])
       p = formation.pattern(e)
       w = pattern.wedding(p)
       g = transition.graph(e, w, n[a])
@@ -243,9 +258,14 @@ transition.BP.graph.analysis <- function(){
       cat("Munich ", j, "\n")
     }
     
+    XMIN = min(Entropy.Complexity[,1], XMIN) 
+    YMAX = max(Entropy.Complexity[,2], YMAX)
+    
     name = paste("transitionGraphD",n[a],"t",tal[b], ".png", sep="")
     png(name, width = 1500, height = 850)
+    
     plots[[i]] = HC.color.shape.signal(regions, types, Entropy.Complexity)
+    
     print(plots[[i]])
     dev.off()
     
@@ -259,21 +279,26 @@ transition.BP.graph.analysis <- function(){
     #plot(net, vertex.label = V(net)$name)
   }
   
-  png("transitionGraphHilbertBP.png", width = 1500, height = 850)
+  for(i in 1:(length(n)*length(tal))){
+    plots[[i]] = plots[[i]] + xlim(limits=c(XMIN, XMAX)) + ylim(limits=c(YMIN, YMAX)) 
+  }
+  
+  
+  png("transitionGraphHilbert.png", width = 1500, height = 850)
+  
   p = ggarrange(plots[[1]], plots[[2]], plots[[3]], plots[[4]], plots[[5]],
             plots[[6]], plots[[7]], plots[[8]], plots[[9]], plots[[10]],
             plots[[11]], plots[[12]], plots[[13]], plots[[14]], plots[[15]],
             plots[[16]], plots[[17]], plots[[18]], plots[[19]], plots[[20]],
             ncol=5, nrow=4, common.legend = TRUE, legend = "right") + 
-    ggtitle(expression(italic("SAR Images - Transition Graph"))) +
+    ggtitle(expression(italic("SAR Images - Transition Graph - Sliding Window"))) +
     xlab(expression(italic(H))) + ylab(expression(italic(C))) + labs(colour=expression(italic(Regions))) +
     theme_igray() + theme(text=element_text(size=14, family="Times New Roman"), axis.text.x=element_blank(), axis.text.y=element_blank(),plot.title = element_text(hjust=0.5)) + 
     guides(colour = guide_legend(override.aes = list(size=3)))
+  
   print(p)
   dev.off()
   
 }
 
-
-
-transition.BP.graph.analysis()
+transition.graph.analysis()

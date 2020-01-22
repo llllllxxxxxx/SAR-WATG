@@ -8,11 +8,8 @@
 # Contact: eduarda-chagas@ufmg.br
 ####################################################################################
 
-source("SAR_TimeSerie.R")
-source("../Band&Pompe.R")
-source("../Textures/TextureTimeSeries.R")
 if(!require(devtools)) install.packages("devtools")
-require("ggpubr")
+if(!require(ggpubr)) install.packages("ggpubr")
 
 ns.guatemala = 8
 dimen.guatemala <- matrix(nrow = ns.guatemala, ncol = 4)
