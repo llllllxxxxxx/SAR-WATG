@@ -1,7 +1,7 @@
 ###################################################################################
 # Textures_hilbert.R 
 #
-# Plot SAR data as one-dimensional data
+# Generate Plot of SAR data as one-dimensional data
 #
 # Author: Eduarda Chagas
 # Date : Oct 2019
@@ -9,7 +9,11 @@
 ####################################################################################
 
 if(!require(devtools)) install.packages("devtools")
+if(!require(ggplot2)) install.packages("ggplot2")
 if(!require(ggpubr)) install.packages("ggpubr")
+if(!require(raster)) install.packages("raster")
+if(!require(ggthemes)) install.packages("ggthemes")
+
 
 ns.guatemala = 8
 dimen.guatemala <- matrix(nrow = ns.guatemala, ncol = 4)
@@ -61,13 +65,13 @@ dimen.guatemala[8,] <- c(1675, 128, 1930, 128) #region 8
 
 SAR.timeSeries <- function(analysis, image.region, j){
   if(image.region == 1){
-    sar_data <- raster(paste("../../Data/", "guatemala", "/HHHH", ".grd", sep = ""))
+    sar_data <- raster(paste("../Data/", "guatemala", "/HHHH", ".grd", sep = ""))
     img <- getValuesBlock(sar_data, row = dimen.guatemala[j,1], nrows = dimen.guatemala[j,2], col = dimen.guatemala[j,3], ncols = dimen.guatemala[j,4], format = "matrix")
   }else if(image.region == 2){
-    sar_data <- raster(paste("../../Data/", "cape", "/HHHH", ".grd", sep = ""))
+    sar_data <- raster(paste("../Data/", "cape", "/HHHH", ".grd", sep = ""))
     img <- getValuesBlock(sar_data, row = dimen.canaveral[j,1], nrows = dimen.canaveral[j,2], col = dimen.canaveral[j,3], ncols = dimen.canaveral[j,4], format = "matrix")
   }else{
-    sar_data <- raster(paste("../../Data/", "munich", "/HHHH", ".grd", sep = ""))
+    sar_data <- raster(paste("../Data/", "munich", "/HHHH", ".grd", sep = ""))
     img <- getValuesBlock(sar_data, row = dimen.munich[j,1], nrows = dimen.munich[j,2], col = dimen.munich[j,3], ncols = dimen.munich[j,4], format = "matrix")
   }
   
@@ -76,7 +80,7 @@ SAR.timeSeries <- function(analysis, image.region, j){
   }else if(analysis == 2){ # Raster 2
     time.series = as.vector(img)
   }else{ # Hilbert
-    hilbertcurve <- unlist(read.table("../../Data/Hilbert/HilbertCurves128.txt")) + 1
+    hilbertcurve <- unlist(read.table("../Data/Hilbert/HilbertCurves128.txt")) + 1
     time.series = img[hilbertcurve]
   }
   

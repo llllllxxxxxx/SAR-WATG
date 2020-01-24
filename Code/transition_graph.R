@@ -1,12 +1,12 @@
 ########################################################################################################
-# Transition_graph.R
+# transition_graph.R
 #
-# Analysis of SAR images using Hilbert space-filling curves and ordinal patterns transition graphs
+# Analysis of SAR images using Hilbert space-filling curves and WATG
 # (sliding window)
 #
 # Author: Eduarda Chagas
 # Date : Oct 2019
-# Contact: eduarda-chagas@ufmg.br
+# Contact: eduarda.chagas@dcc.ufmg.br
 ########################################################################################################
 
 ############################################# Packages #################################################
@@ -84,42 +84,6 @@ transition.graph <- function(elements, wedding, D){
   graph
 }
 
-###################################### Function of Plot ##############################################
-
-HC.color.shape.signal <- function(color.signal, shape.signal, signal.values){
-  
-  shape.select <- c(17,18,19,8)
-  
-  # Paleta montada a partir de https://coolors.co/
-  rainbow.colors <- palette(c("#494947", #DarkGreen
-                              "#7494EA", #MutedDarkBlue
-                              "#B14AED", #Violet
-                              "#44CCFF", #BrightLightBlue
-                              "#35FF69", #BrightGreen
-                              "#ED8438", #Orange
-                              "#E7AD99", #Pink
-                              "#C18C5D", #LightBrown
-                              "#BF6F00", #DarkYellow
-                              "#FB4D3D", #BrightRed
-                              "#495867", #DarkGray
-                              "#98CE00", #SHEEN GREEN
-                              "#98838F")) #MOUNTBATTEN PINK
-  
-  Color = rainbow.colors[color.signal]
-  Shape = shape.select[shape.signal]
-  Texture = color.signal
-  signal.values <- data.frame("H" = signal.values[,1], "C" = signal.values[,2], "Color" = Color, "Shape" = Shape, "Texture" = Texture)
-  
-  p = ggplot(signal.values, aes(x = signal.values$H, y = signal.values$C)) +
-    geom_point(shape = signal.values$Shape, color = signal.values$Color, size = 1) + 
-    labs(x="", y="") + 
-    theme_few(base_size = 18, base_family = "serif")  + theme(plot.title = element_text(hjust=0.5)) + 
-    scale_colour_few("Dark")
-  return(p)
-  33
-  - `Band&Pompe.R`- 
-} 
-
 
 ###################################### Image Sample Parameters #######################################
 
@@ -190,10 +154,8 @@ transition.graph.analysis <- function(){
   a = b = 0
   n = c(3,4,5,6) #Dimension parameter
   tal = c(1,2,3,4,5) #Delay parameter
-  plots = array(list(), 20)
-  hilbertcurve <- unlist(read.table("../../Data/Hilbert/HilbertCurves128.txt")) + 1
-  types <- c(rep(1,40), rep(2,40), rep(3,40), rep(4, 40))
-  regions <- c(rep(1,40), rep(2,80), rep(4, 40))
+  hilbertcurve = unlist(read.table("../Data/Hilbert/HilbertCurves128.txt")) + 1
+  Entropy.Complexity.csv = matrix(nrow = n.total*length(n)*length(tal), ncol = 2)
   
   for(i in 1:(length(n)*length(tal))){
     cat("- Plane: ", i, "de 20 ", "\n")
@@ -206,7 +168,7 @@ transition.graph.analysis <- function(){
     Entropy.Complexity <- matrix(nrow = n.total, ncol = 2)
     
     #Guatemala
-    sar_data <- raster(paste("../../Data/", "guatemala", "/HHHH", ".grd", sep = ""))
+    sar_data <- raster(paste("../Data/", "guatemala", "/HHHH", ".grd", sep = ""))
     for(j in c(1:ns.guatemala)){
       img <- getValuesBlock(sar_data, row = dimen.guatemala[j,1], nrows = dimen.guatemala[j,2], col = dimen.guatemala[j,3], ncols = dimen.guatemala[j,4], format = "matrix")
       ts = img[hilbertcurve]/max(img[hilbertcurve])
@@ -219,7 +181,7 @@ transition.graph.analysis <- function(){
       cat("Guatemala ", j, "\n")
     }
     #Cape Canaveral - behavior 1
-    sar_data <- raster(paste("../../Data/", "cape", "/HHHH", ".grd", sep = ""))
+    sar_data <- raster(paste("../Data/", "cape", "/HHHH", ".grd", sep = ""))
     for(j in c(1:ns.canaveral.behavior1)){
       img <- getValuesBlock(sar_data, row = dimen.canaveral.behavior1[j,1], nrows = dimen.canaveral.behavior1[j,2], col = dimen.canaveral.behavior1[j,3], ncols = dimen.canaveral.behavior1[j,4], format = "matrix")
       ts = img[hilbertcurve]/max(img[hilbertcurve])
@@ -232,7 +194,7 @@ transition.graph.analysis <- function(){
       cat("Cape 1 ", j, "\n")
     }
     #Cape Canaveral - behavior 2
-    sar_data <- raster(paste("../../Data/", "cape", "/HHHH", ".grd", sep = ""))
+    sar_data <- raster(paste("../Data/", "cape", "/HHHH", ".grd", sep = ""))
     for(j in c(1:ns.canaveral.behavior2)){
       img <- getValuesBlock(sar_data, row = dimen.canaveral.behavior2[j,1], nrows = dimen.canaveral.behavior2[j,2], col = dimen.canaveral.behavior2[j,3], ncols = dimen.canaveral.behavior2[j,4], format = "matrix")
       ts = img[hilbertcurve]/max(img[hilbertcurve])
@@ -245,7 +207,7 @@ transition.graph.analysis <- function(){
       cat("Cape 2 ", j, "\n")
     }
     #Munich
-    sar_data <- raster(paste("../../Data/", "munich", "/HHHH", ".grd", sep = ""))
+    sar_data <- raster(paste("../Data/", "munich", "/HHHH", ".grd", sep = ""))
     for(j in c(1:ns.munich)){
       img <- getValuesBlock(sar_data, row = dimen.munich[j,1], nrows = dimen.munich[j,2], col = dimen.munich[j,3], ncols = dimen.munich[j,4], format = "matrix")
       ts = img[hilbertcurve]/max(img[hilbertcurve])
@@ -258,46 +220,11 @@ transition.graph.analysis <- function(){
       cat("Munich ", j, "\n")
     }
     
-    XMIN = min(Entropy.Complexity[,1], XMIN) 
-    YMAX = max(Entropy.Complexity[,2], YMAX)
-    
-    name = paste("transitionGraphD",n[a],"t",tal[b], ".png", sep="")
-    png(name, width = 1500, height = 850)
-    
-    plots[[i]] = HC.color.shape.signal(regions, types, Entropy.Complexity)
-    
-    print(plots[[i]])
-    dev.off()
-    
-    #V(net)$color <- "#C9C5C5"  
-    #V(net)$size <- 40
-    #E(net)$width <- 2
-    #E(net)$arrow.size <- .1
-    #E(net)$edge.color <- "#838181"
-    #E(net)$width <- 1
-    #E(net)$label <- floor(100*E(net)$weight)/100
-    #plot(net, vertex.label = V(net)$name)
+    Entropy.Complexity.csv[((n.total*(i-1))+1):(n.total*i), 1] = Entropy.Complexity[,1]
+    Entropy.Complexity.csv[((n.total*(i-1))+1):(n.total*i), 2] = Entropy.Complexity[,2]
   }
   
-  for(i in 1:(length(n)*length(tal))){
-    plots[[i]] = plots[[i]] + xlim(limits=c(XMIN, XMAX)) + ylim(limits=c(YMIN, YMAX)) 
-  }
-  
-  
-  png("transitionGraphHilbert.png", width = 1500, height = 850)
-  
-  p = ggarrange(plots[[1]], plots[[2]], plots[[3]], plots[[4]], plots[[5]],
-            plots[[6]], plots[[7]], plots[[8]], plots[[9]], plots[[10]],
-            plots[[11]], plots[[12]], plots[[13]], plots[[14]], plots[[15]],
-            plots[[16]], plots[[17]], plots[[18]], plots[[19]], plots[[20]],
-            ncol=5, nrow=4, common.legend = TRUE, legend = "right") + 
-    ggtitle(expression(italic("SAR Images - Transition Graph - Sliding Window"))) +
-    xlab(expression(italic(H))) + ylab(expression(italic(C))) + labs(colour=expression(italic(Regions))) +
-    theme_igray() + theme(text=element_text(size=14, family="Times New Roman"), axis.text.x=element_blank(), axis.text.y=element_blank(),plot.title = element_text(hjust=0.5)) + 
-    guides(colour = guide_legend(override.aes = list(size=3)))
-  
-  print(p)
-  dev.off()
+  write.csv(Entropy.Complexity.csv,'../Data/EntropyComplexity.csv', row.names = FALSE)
   
 }
 

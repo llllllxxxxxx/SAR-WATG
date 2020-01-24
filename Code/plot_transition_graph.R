@@ -1,7 +1,7 @@
 ###################################################################################################################
 # Transition_graph.R
 #
-# Generate Plot of Analysis of SAR images using Hilbert space-filling curves and ordinal patterns transition graphs
+# Generate Plot of Analysis of SAR images using Hilbert space-filling curves and WATG
 # (sliding window)
 #
 # Author: Eduarda Chagas
@@ -16,7 +16,7 @@ if(!require(ggplot2)) install.packages("ggplot2")
 if(!require(ggthemes)) install.packages("ggthemes")
 if(!require(igraph)) install.packages("igraph")
 if(!require(ggpubr)) install.packages("ggpubr")
-source("Theory_Information.R")
+source("theory_information.R")
 
 ############################### Transition graphs functions ############################################
 
@@ -41,7 +41,6 @@ formation.pattern <- function(elements){
   }
   patterns
 }
-
 
 define.symbols<-function(dimension){
   d = c(1:dimension)
@@ -192,13 +191,12 @@ plot.transition.graph.analysis <- function(){
   n = c(3,4,5,6) #Dimension parameter
   tal = c(1,2,3,4,5) #Delay parameter
   plots = array(list(), 20)
-  hilbertcurve <- unlist(read.table("../../Data/Hilbert/HilbertCurves128.txt")) + 1
+  hilbertcurve <- unlist(read.table("../Data/Hilbert/HilbertCurves128.txt")) + 1
   types <- c(rep(1,40), rep(2,40), rep(3,40), rep(4, 40))
   regions <- c(rep(1,40), rep(2,80), rep(4, 40))
   n.total = 160
   
-  Entropy.Complexity.csv <-read.csv(file="../../Data/EntropyComplexity.csv", header=TRUE, sep=",")
-  
+  Entropy.Complexity.csv <-read.csv(file="../Data/EntropyComplexity.csv", header=TRUE, sep=",")
   
   for(i in 1:(length(n)*length(tal))){
     
@@ -211,8 +209,8 @@ plot.transition.graph.analysis <- function(){
     
     Entropy.Complexity <- matrix(nrow = n.total, ncol = 2)
     
-    Entropy.Complexity[,1] = Entropy.Complexity.csv[((n.total*(i-1))+1):(n.total*i),2]
-    Entropy.Complexity[,2] = Entropy.Complexity.csv[((n.total*(i-1))+1):(n.total*i),3]
+    Entropy.Complexity[,1] = Entropy.Complexity.csv[((n.total*(i-1))+1):(n.total*i), 1]
+    Entropy.Complexity[,2] = Entropy.Complexity.csv[((n.total*(i-1))+1):(n.total*i), 2]
     
     plots[[i]] = HC.color.shape.signal(factorial(n[a])^2,regions, types, Entropy.Complexity)
   }

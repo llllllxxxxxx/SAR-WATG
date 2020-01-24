@@ -30,11 +30,11 @@ We propose a new technique for SAR image texture characterization based on ordin
 - `/Reports`- the reports developed during the study. 
 
 #### In the code folder, we have the following scripts:
-- `Generate_polsar_image.R`- 	
-- `Plot_SAR_TimeSeries.R`- 
-- `Plot_Transition_graph.R`- 	
+- `Generate_polsar_image.R`- Contains the functions of reading and analysis of SAR image.
+- `Plot_SAR_TimeSeries.R`- It executes the plotting of SAR data as one-dimensional data
+- `Plot_Transition_graph.R`- It executes the plotting of SAR image results using Hilbert curves and WATG.
 - `Theory_Information.R`- Contains the implementation of the information theory descriptors used throughout the work.
-- `Transition_graph.R`- 
+- `Transition_graph.R`- It executes the analysis of SAR images using Hilbert curves and WATG.
 
 #### Datasets
 
@@ -58,7 +58,7 @@ Our procedure consists of the following steps:
 	3. Obtaining a probability distribution function from this graph;
 	4. Computing the Entropy and Statistical Complexity of this distribution
 
-![Methodology used in the characterization of SAR image textures](https://github.com/EduardaChagas/PolSAR-from-IT/blob/master/Images/Methodology/WATG.pdf)
+![Methodology used in the characterization of SAR image textures](https://github.com/EduardaChagas/PolSAR-from-IT/blob/master/Figures/WATG.pdf)
 
 ### Software requirements
 
@@ -106,6 +106,7 @@ $ Rscript
 This experiment is very computationally expensive and takes time to run, as we evaluate 160 samples of SAR images. 
 
 Finally, if you have any questions or you want to report anaything, feel free to reach me at: eduarda.chagas@dcc.ufmg.br. 
+
 
 
 
