@@ -21,20 +21,19 @@ We propose a new technique for SAR image texture characterization based on ordin
 	This modification takes into account the scattering properties of the target, and leads to a good characterization of several types of textures.
 	Experiments with data from Munich urban areas, Guatemala forest regions, and Cape Canaveral ocean samples demonstrate the effectiveness of our technique, which achieves satisfactory levels of separability.
 
-#### The repository is organized as follows:
-- `/Code` - the scripts used to develop our research; 
-- `/Common` - the BibTex files used in the reports developed; 
-- `/Data` - the auxiliary data used during analysis; 
-- `/Figures`- Illustrations used in final report; 
-- `/Images`- Illustration of the results obtained throughout the research, alongside the methodology files corresponding to our *overview* figure; 
-- `/Reports`- the reports developed during the study. 
+#### Methodology
 
-#### In the code folder, we have the following scripts:
-- `Generate_polsar_image.R`- Contains the functions of reading and analysis of SAR image.
-- `Plot_SAR_TimeSeries.R`- It executes the plotting of SAR data as one-dimensional data
-- `Plot_Transition_graph.R`- It executes the plotting of SAR image results using Hilbert curves and WATG.
-- `Theory_Information.R`- Contains the implementation of the information theory descriptors used throughout the work.
-- `Transition_graph.R`- It executes the analysis of SAR images using Hilbert curves and WATG.
+Our procedure consists of the following steps:
+
+	1. Transforming a 2-D patch of data into a time series using a Hilbert Space Filling Curve;
+	
+	2. Building an Ordinal Pattern Transition Graph with weighted edges;
+	
+	3. Obtaining a probability distribution function from this graph;
+	
+	4. Computing the Entropy and Statistical Complexity of this distribution.
+
+![Methodology used in the characterization of SAR image textures](https://github.com/EduardaChagas/SAR-WATG/blob/master/Figures/WATG.png)
 
 #### Datasets
 
@@ -50,15 +49,20 @@ The images used in this experiment are results from the HHHH SAR band and each s
 
 A total of 160 samples were considered during the investigation, 40 samples from each category of regions: Guatemalan forest regions; oceanic regions of Cape Canaveral with behavior 1; Cape Canaveral Behavioral Ocean Regions 2 and Urban City of Munich.
 
-#### Methodology
+#### The repository is organized as follows:
+- `/Code` - the scripts used to develop our research; 
+- `/Common` - the BibTex files used in the reports developed; 
+- `/Data` - the auxiliary data used during analysis; 
+- `/Figures`- Illustrations used in final report; 
+- `/Images`- Illustration of the results obtained throughout the research, alongside the methodology files corresponding to our *overview* figure; 
+- `/Reports`- the reports developed during the study. 
 
-Our procedure consists of the following steps:
-	1. Transforming a 2-D patch of data into a time series using a Hilbert Space Filling Curve,
-	2. Building an Ordinal Pattern Transition Graph with weighted edges;
-	3. Obtaining a probability distribution function from this graph;
-	4. Computing the Entropy and Statistical Complexity of this distribution
-
-![Methodology used in the characterization of SAR image textures](https://github.com/EduardaChagas/PolSAR-from-IT/blob/master/Figures/WATG.pdf)
+#### In the code folder, we have the following scripts:
+- `Generate_polsar_image.R`- Contains the functions of reading and analysis of SAR image.
+- `Plot_SAR_TimeSeries.R`- It executes the plotting of SAR data as one-dimensional data
+- `Plot_Transition_graph.R`- It executes the plotting of SAR image results using Hilbert curves and WATG.
+- `Theory_Information.R`- Contains the implementation of the information theory descriptors used throughout the work.
+- `Transition_graph.R`- It executes the analysis of SAR images using Hilbert curves and WATG.
 
 ### Software requirements
 
@@ -93,19 +97,10 @@ igraph         1.2.4.1
 statcomp       0.0.1.1000      
 ```
 
-### Running the scripts
-
-Later, you can run the scripts using `Rscript` to call the experiment execution, this will automatically generate the data results and their plots. 
-
-*This repository already has the actual results described in the article, if you are going to generate new ones, we recommend you to delete the original, as you can rollback further, if you need to*
-
-```sh
-$ Rscript 
-```
-
 This experiment is very computationally expensive and takes time to run, as we evaluate 160 samples of SAR images. 
 
 Finally, if you have any questions or you want to report anaything, feel free to reach me at: eduarda.chagas@dcc.ufmg.br. 
+
 
 
 
