@@ -25,8 +25,6 @@
 
 \usepackage{color}
 
-\hyphenation{}
-
 \newdimen\HilbertLastX
 \newdimen\HilbertLastY
 \newcounter{HilbertOrder}
@@ -210,10 +208,9 @@ ${\bm \pi}^{(D)} = (\pi_1, \pi_2, \dots, \pi_D)$ so every element ${\bm \pi}^{(D
 ($\pi_j \neq \pi_k$ for every $j \neq k$). 
 Consider for the time series ${\mathcal X} \equiv \{x_t\}_{t=1}^{T}$ its time delay embedding representation,
 with embedding dimension $D \geq 2$ and time delay $\tau \geq 1$ ($\tau \in {\Bbb N}$, also called ``embedding time'', ``time delay'', or ``delay''):
-
 \begin{equation} 
 \label{eq:time-delay}
-{\mathbf X}^{(D,\tau)}_t ~=~( x_t,x_{t+\tau},\dots,x_{t+(D-1)\tau} ) ,
+{\mathbf X}^{(D,\tau)}_t =( x_t,x_{t+\tau},\dots,x_{t+(D-1)\tau} ) ,
 \end{equation} 
 
 for $t = 1,2,\dots,N$ with $N = T-(D-1) \tau$.
@@ -264,11 +261,9 @@ To counterbalance these facts, we propose a modification of the current ordinal 
 Two approaches are considered in relation to the weight of edges in the literature.
 Some authors employ unweighted edge~\cite{McCullough2015lagged,Kulp2016ordinal} representing only the existence of such transitions, while others apply the frequency of transitions~\cite{Sorrentino2015periodic,Zhang2017ConstructingOP}.
 The weights $\mathbb{W} = \{w_{v_{\widetilde{\pi}^D_i}, v_{\widetilde\pi^D_j}}: v_{\widetilde\pi^D_i}, v_{\widetilde\pi^D_j} \in V \}$ assigned to each edge describes the chances of transition between two particular patterns $(v_{\widetilde\pi^D_i}, v_{\widetilde\pi^D_j})$ calculated by their respective relative frequencies, ie:
-
 \begin{equation}
 w_{v_{\widetilde\pi^D_i}, v_{\widetilde\pi^D_j}} = \frac{|\Pi_{\widetilde\pi^D_i,\widetilde\pi^D_j}|}{T-(D-1)\tau-1},
 \end{equation}
-
 where $|\Pi_{\widetilde\pi^D_i,\widetilde\pi^D_j}|$ is the number of transitions from pattern $\widetilde\pi^D_i$ to pattern $\widetilde\pi^D_j$ and $\sum_{v_{\widetilde\pi^D_i}, v_{\widetilde\pi^D_j}}w_{v_{\widetilde\pi^D_i}, v_{\widetilde\pi^D_j}} = 1$,
 and the denominator is the number of transitions between sequential patterns in the series of motifs of length $T-(D-1)\tau$.
 
@@ -291,13 +286,10 @@ where $x_i, x_j \in \mathbf{X}^{(D, \tau)}_t$.
 Traditionally, the transition graph assigns uniform weight to each transition between patterns and normalizes the result obtained by dividing by the total transitions.
 In this modification, the $w_{v_{\widetilde\pi^D_i}, v_{\widetilde\pi^D_j}}$ weights assigned to each edge depict the amplitude difference observed in the transition.
 So we have that:	
-
 \begin{equation}
 w_{v_{\widetilde \pi^D_i}, v_{\widetilde \pi^D_j}} =  \sum_{i : \{\mathbf{X}^{(D,\tau)}_t \mapsto \widetilde\pi^D_i\}} \sum_{j : \{\mathbf{X}^{(D,\tau)}_t \mapsto \widetilde\pi^D_j\}} |\beta_i - \beta_j| .
 \end{equation}
-
 Thus, the probability distribution taken from the weighted amplitude transition graph is given as follows:	
-
 \begin{align}
 &\left\{\begin{array}{l}
 \lambda_{v_{\widetilde\pi^D_i}, v_{\widetilde\pi^D_j}} = 1, \text{ if } (v_{\widetilde\pi^D_i}, v_{\widetilde\pi^D_j}) \in {E} \\
@@ -411,8 +403,9 @@ Since such values inform us of intrinsic characteristics of the dynamics of the 
 As shown in Figure~\ref{fig:Regions}, class discrimination decreases with $\tau$, which means that there is a loss of effect from the peak values found in the series, thus making a better distinction between classes when we have $\tau = 1$.
 As WATG captures amplitude differences between different time series, when the values of the $\tau$ scale increase, well-distributed weight plots are formed, thus obtaining increasing entropy values.
 On the other hand, as we increase $D$, the granularity of the information increases, capturing more spatial dependence structures in the data and, consequently, acquiring greater statistical complexity.
-As can be seen in the Figure.~\ref{fig:Regions} There is a relationship between the dimension variable of ordinal patterns and the discrimination between the analyzed regions that presents its best result for $D = 3$.
-On the other hand, when we have D = 6, textures acquire a lower entropy value and become harder to distinguish.
+As can be seen in Figure~\ref{fig:Regions}.
+There is a relationship between the dimension variable of ordinal patterns and the discrimination between the analyzed regions that presents its best result for $D = 3$.
+On the other hand, when we have $D = 6$, textures acquire a lower entropy value and become harder to distinguish.
 
 \begin{figure}[hbt]
 	\centering
@@ -445,8 +438,7 @@ As a result, in addition to perfectly separating urban areas from the others ana
 
 The source code generated during the current study are available in the \textit{SAR-WATG} repository, \url{https://github.com/EduardaChagas/SAR-WATG}.
 
-\bibliographystyle{isprs}
-\bibliography{../../Common/references.bib}
+\bibliography{../../Common/references}
 
 \section*{ACKNOWLEDGEMENTS}\label{ACKNOWLEDGEMENTS}
 
