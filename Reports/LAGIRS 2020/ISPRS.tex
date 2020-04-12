@@ -5,8 +5,6 @@
 \usepackage{geometry}
 \usepackage[labelsep=period]{caption}  
 \usepackage[british]{babel} 
-
-%\usepackage{natbib}
 \usepackage{amsfonts,amsmath,bm,bbm}
 \usepackage{hyperref} 
 \usepackage{graphicx,xurl}
@@ -14,9 +12,9 @@
 \usepackage{todonotes}
 \usepackage{lipsum}
 \usepackage{xcolor}
-
 \usepackage{tikz}
 \usepackage{ifthen}
+\renewcommand{\Bbb}{\mathbb}
 
 \geometry{a4paper, top=25mm, left=20mm, right=20mm, bottom=25mm, headsep=10mm, footskip=12mm}
 
@@ -57,10 +55,6 @@
    \advance \HilbertLastX by #1
    \advance \HilbertLastY by #2
    \pgfpathmoveto{\pgfqpoint{\HilbertLastX}{\HilbertLastY}}
-   % Alternative implementation using plot streams:
-   % \pgfplothandlerlineto
-   % \pgfplotstreamstart
-   % \pgfplotstreampoint{\pgfqpoint{\HilbertLastX}{\HilbertLastY}}
    \setcounter{HilbertOrder}{#3}
    \Hilbert[1mm,0mm,-1mm,0mm,0mm,1mm,0mm,-1mm]
    \pgfusepath{stroke}%
@@ -151,7 +145,6 @@ The technique is illustrated in Figure~\ref{fig:WATG}, and detailed in the follo
 \begin{figure}[hbt]
 	\centering
 	\includegraphics[scale = 0.32]{Figures/WATG.pdf}
-	%\vspace{-1.2cm}
 	\caption{Outline of the technique for the characterization of textures.}
 	\label{fig:WATG}
 \end{figure}

@@ -30,12 +30,12 @@ equalize <- function(data, nrow, ncol){
   return(data)
 }
 
-nrow <- 6512 #Number of rows of the image
-ncol <- 3300 #Number of columns of the image
+nrow = 6512 #Number of rows of the image
+ncol = 3300 #Number of columns of the image
 
-file_HHHH <- file("HHHH.gri", "rb")
+file_HHHH = file("../Data/cape/HHHH.gri", "rb")
 
-intensity_matrix <- fill_matrix(file_HHHH, nrow , ncol)
+intensity_matrix = fill_matrix(file_HHHH, nrow , ncol)
 
 #Close files
 close(file_HHHH)
@@ -43,10 +43,13 @@ close(file_HHHH)
 rm(file_HHHH)
 
 #Direct projection of z on colors' space
-equalized_matrix <- equalize(intensity_matrix, nrow, ncol)
+equalized_matrix = equalize(intensity_matrix, nrow, ncol)
 
-#writePNG(equalized_matrix, target = "PolSAR_Image.png")
+#writePNG(equalized_matrix[750:878, 1700:1828], target = "amostra1.png")
+#writePNG(equalized_matrix[550:678, 1850:1978], target = "amostra2.png")
 #writePNG(equalized_matrix[1:600, 1:600], target = "SampleTexture.png")
+#writePNG(equalized_matrix[750:878, 1300:1428], target = "amostra1.png")
+#writePNG(equalized_matrix[550:678, 1350:1478], target = "amostra2.png")
 
 #Cape Canaveral
 #c(50, 128, 1700, 128)
