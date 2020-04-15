@@ -125,7 +125,7 @@ plot.transition.graph.analysis <- function(){
   n.total = 160
   a = b = 0
   
-  Entropy.Complexity.csv <-read.csv(file="../Data/EntropyComplexityBPTG.csv", header=TRUE, sep=",")
+  Entropy.Complexity.csv <-read.csv(file="../Data/EntropyComplexityWATG.csv", header=TRUE, sep=",")
   
   for(i in 1:(length(n)*length(tal))){
     
@@ -182,7 +182,7 @@ plot.d3t1 <- function(){
   regions = c(rep(1,40), rep(2,80), rep(4, 40))
   n.total = 160
   
-  Entropy.Complexity.csv = read.csv(file="../Data/EntropyComplexityBPTG.csv", header=TRUE, sep=",")
+  Entropy.Complexity.csv = read.csv(file="../Data/EntropyComplexityWATG.csv", header=TRUE, sep=",")
   Entropy.Complexity = matrix(nrow = n.total, ncol = 2)
     
   Entropy.Complexity[,1] = Entropy.Complexity.csv[1:160, 1]
@@ -195,4 +195,5 @@ plot.d3t1 <- function(){
   
 }
 
-plot.transition.graph.analysis()
+#plot.transition.graph.analysis()
+plot.d3t1()

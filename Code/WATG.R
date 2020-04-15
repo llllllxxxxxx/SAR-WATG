@@ -2,10 +2,9 @@
 # WATG.R
 #
 # Analysis of SAR images using Hilbert space-filling curves and WATG
-# (sliding window)
 #
 # Author: Eduarda Chagas
-# Date : Oct 2019
+# Date : Apr 2020
 # Contact: eduarda.chagas@dcc.ufmg.br
 ########################################################################################################
 
@@ -21,67 +20,36 @@ source("theory_information.R")
 
 ############################### Transition graphs functions ############################################
 
-sliding.window <- function(series, dimension, delay){
-  i = j = 1
-  n = length(series)
-  elements = matrix(nrow = n-(dimension-1)*delay, ncol = dimension)
-  s = seq(0, (0 + (dimension - 1)*delay), by = delay)
-  while(i+((dimension-1)*delay) <= length(series)){
-    elements[j,] = series[s + i]
-    i = i + 1
-    j = j + 1
-  }
-  elements
+FP <- function(n, dimension, delay){
+  dyn.load("FormationPatterns.so")
+  p <- .Call("FormationPatterns", n, dimension, delay)
+  p = t(p) + 1
+  return(p)
 }
 
-BP <- function(serie, dimension, delay){
-  n_symbols = i = 1
+formationPattern <- function(serie, dimension, delay, option){
+  i = 1
   n = length(serie)
   p_patterns = elements = index2 = matrix(nrow=n,ncol=dimension)
-  index = c(0:(dimension-1)) 
-  while(i <= n){    
-    first = i
-    if((i+dimension-1)<=n){
-      index2[n_symbols,] = i:(i+dimension-1)
-      elements[n_symbols,] = serie[i:(i+dimension-1)]
-      p_patterns[n_symbols,] = index[order(elements[n_symbols,])]
-      i = first + delay
-      n_symbols = n_symbols + 1
-    }else break
+  index = c(0:(dimension-1))
+  
+  index2 = FP(length(serie), dimension, delay)
+  
+  while((i + ((dimension-1)*delay)) <= n){ 
+    elements[i,] = serie[index2[i,]]
+    p_patterns[i,] = index[order(elements[i,])]
+    i = i + 1
   }
-  elements = na.omit(elements)
-  return(elements[1:dim(elements)[1],]) 
-}
-
-formation.pattern <- function(elements){
-  patterns = matrix(nrow = dim(elements)[1], ncol = dim(elements)[2])
-  index = c(1:(dim(elements)[2])) 
-  for(i in 1:dim(elements)[1]){
-    patterns[i,] = index[order(elements[i,])]
-  }
-  patterns
-}
-
-formation.pattern.fast <- function(elements){
-  dimension = dim(elements)[1]
-  if(dimension == 3){
-    # 0 = 210
-    # 1 = 120
-    # 2 = 201
-    # 3 = 102
-    # 4 = 021
-    # 5 = 012
-    
-    ## 0 = 012
-    ## 1 = 021
-    ## 2 = 102
-    ## 3 = 120
-    ## 4 = 201
-    ## 5 = 210
-    
-  }
-  if(dimension == 4){
-    
+  
+  if(option == 0){
+    p_patterns = na.omit(p_patterns)
+    return(p_patterns[1:dim(p_patterns)[1],])
+  }else if(option == 1){
+    elements = na.omit(elements)
+    return(elements[1:dim(elements)[1],])    
+  }else{
+    index2 = na.omit(index2)
+    return(index2[1:dim(index2)[1],])    
   }
 }
 
@@ -93,6 +61,7 @@ define.symbols <- function(dimension){
 }
 
 pattern.wedding <- function(patterns){
+  patterns = patterns + 1
   m = dim(patterns)[1]
   D = dim(patterns)[2]
   symbols = define.symbols(D)
@@ -112,9 +81,13 @@ pattern.wedding <- function(patterns){
   wedding
 }
 
-transition.graph <- function(elements, wedding, D){
+transition.graph.weight <- function(series, dimension, delay){
+  
+  graph = matrix(0, nrow = factorial(dimension), ncol = factorial(dimension))
+  patterns = formationPattern(series, dimension, delay, 0)
+  elements = formationPattern(series, dimension, delay, 1)
+  wedding = pattern.wedding(patterns)
   m = length(wedding)
-  graph = matrix(0,nrow = factorial(D), ncol = factorial(D))
   weight.total = 0
   
   for(i in 1:(m-1)){
@@ -124,7 +97,7 @@ transition.graph <- function(elements, wedding, D){
     weight.total = weight.total + abs(weight.i1 - weight.i2)
   }
   graph = graph/weight.total
-  graph
+  return(graph)
 }
 
 
@@ -195,7 +168,7 @@ dimen.guatemala[38:40,] = c(row4[1:3], rep(128, 3), rep(cols[5], 3), rep(128, 3)
 
 ###################################### Function of Analysis ##########################################
 
-transition.graph.analysis <- function(){
+transition.graph.weight.analysis <- function(){
   
   a = b = 0
   n = c(3,4,5,6) #Dimension parameter
@@ -218,10 +191,7 @@ transition.graph.analysis <- function(){
     for(j in c(1:ns.guatemala)){
       img = getValuesBlock(sar_data, row = dimen.guatemala[j,1], nrows = dimen.guatemala[j,2], col = dimen.guatemala[j,3], ncols = dimen.guatemala[j,4], format = "matrix")
       ts = img[hilbertcurve]/max(img[hilbertcurve])
-      e = sliding.window(ts, n[a], tal[b])
-      p = formation.pattern(e)
-      w = pattern.wedding(p)
-      g = transition.graph(e, w, n[a])
+      g = transition.graph.weight(ts, n[a], tal[b])
       Entropy.Complexity[j, 1] <- shannonNormalized(as.vector(g))
       Entropy.Complexity[j, 2] <- Ccomplexity(as.vector(g))
       cat("Guatemala ", j, "\n")
@@ -231,10 +201,7 @@ transition.graph.analysis <- function(){
     for(j in c(1:ns.canaveral.behavior1)){
       img = getValuesBlock(sar_data, row = dimen.canaveral.behavior1[j,1], nrows = dimen.canaveral.behavior1[j,2], col = dimen.canaveral.behavior1[j,3], ncols = dimen.canaveral.behavior1[j,4], format = "matrix")
       ts = img[hilbertcurve]/max(img[hilbertcurve])
-      e = sliding.window(ts, n[a], tal[b])
-      p = formation.pattern(e)
-      w = pattern.wedding(p)
-      g = transition.graph(e, w, n[a])
+      g = transition.graph.weight(ts, n[a], tal[b])
       Entropy.Complexity[ns.guatemala + j, 1] <- shannonNormalized(as.vector(g))
       Entropy.Complexity[ns.guatemala + j, 2] <- Ccomplexity(as.vector(g))
       cat("Cape 1 ", j, "\n")
@@ -244,10 +211,7 @@ transition.graph.analysis <- function(){
     for(j in c(1:ns.canaveral.behavior2)){
       img = getValuesBlock(sar_data, row = dimen.canaveral.behavior2[j,1], nrows = dimen.canaveral.behavior2[j,2], col = dimen.canaveral.behavior2[j,3], ncols = dimen.canaveral.behavior2[j,4], format = "matrix")
       ts = img[hilbertcurve]/max(img[hilbertcurve])
-      e = sliding.window(ts, n[a], tal[b])
-      p = formation.pattern(e)
-      w = pattern.wedding(p)
-      g = transition.graph(e, w, n[a])
+      g = transition.graph.weight(ts, n[a], tal[b])
       Entropy.Complexity[(ns.canaveral.behavior1 + ns.guatemala) + j, 1] <- shannonNormalized(as.vector(g))
       Entropy.Complexity[(ns.canaveral.behavior1 + ns.guatemala) + j, 2] <- Ccomplexity(as.vector(g))
       cat("Cape 2 ", j, "\n")
@@ -257,21 +221,20 @@ transition.graph.analysis <- function(){
     for(j in c(1:ns.munich)){
       img = getValuesBlock(sar_data, row = dimen.munich[j,1], nrows = dimen.munich[j,2], col = dimen.munich[j,3], ncols = dimen.munich[j,4], format = "matrix")
       ts = img[hilbertcurve]/max(img[hilbertcurve])
-      e = sliding.window(ts, n[a], tal[b])
-      p = formation.pattern(e)
-      w = pattern.wedding(p)
-      g = transition.graph(e, w, n[a])
+      g = transition.graph.weight(ts, n[a], tal[b])
       Entropy.Complexity[(ns.canaveral.behavior1 + ns.canaveral.behavior2 + ns.guatemala) + j, 1] <- shannonNormalized(as.vector(g))
       Entropy.Complexity[(ns.canaveral.behavior1 + ns.canaveral.behavior2 + ns.guatemala) + j, 2] <- Ccomplexity(as.vector(g))
       cat("Munich ", j, "\n")
     }
     
+    write.csv(Entropy.Complexity, paste('../Data/EntropyComplexityWATG', i, '.csv', sep = ""), row.names = FALSE)
+    
     Entropy.Complexity.csv[((n.total*(i-1))+1):(n.total*i), 1] = Entropy.Complexity[,1]
     Entropy.Complexity.csv[((n.total*(i-1))+1):(n.total*i), 2] = Entropy.Complexity[,2]
   }
   
-  write.csv(Entropy.Complexity.csv,'../Data/EntropyComplexitySLD7T1.csv', row.names = FALSE)
+  write.csv(Entropy.Complexity.csv, '../Data/EntropyComplexityWATG.csv', row.names = FALSE)
   
 }
 
-transition.graph.analysis()
+transition.graph.weight.analysis()

@@ -22,21 +22,29 @@ source("theory_information.R")
 
 ######################################Bandt-Pompe functions #############################################
 
-formationPattern<-function(serie, dimension, delay, option){
-  n_symbols = i = 1
+
+FP <- function(n, dimension, delay){
+  dyn.load("FormationPatterns.so")
+  p <- .Call("FormationPatterns", n, dimension, delay)
+  p = t(p) + 1
+  return(p)
+}
+
+formationPattern <- function(serie, dimension, delay, option){
+  
+  i = 1
   n = length(serie)
   p_patterns = elements = index2 = matrix(nrow=n,ncol=dimension)
-  index = c(0:(dimension-1)) 
-  while(i <= n){    
-    first = i
-    if((i+dimension-1)<=n){
-      index2[n_symbols,] = i:(i+dimension-1)
-      elements[n_symbols,] = serie[i:(i+dimension-1)]
-      p_patterns[n_symbols,] = index[order(elements[n_symbols,])]
-      i = first + delay
-      n_symbols = n_symbols + 1
-    }else break
+  index = c(0:(dimension-1))
+  
+  index2 = FP(length(serie), dimension, delay)
+  
+  while((i + ((dimension-1)*delay)) <= n){ 
+    elements[i,] = serie[index2[i,]]
+    p_patterns[i,] = index[order(elements[i,])]
+    i = i + 1
   }
+  
   if(option == 0){
     p_patterns = na.omit(p_patterns)
     return(p_patterns[1:dim(p_patterns)[1],])
@@ -178,4 +186,4 @@ BP.analysis <- function(){
   
 }
 
-#BP.analysis()
+BP.analysis()

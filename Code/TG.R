@@ -29,21 +29,28 @@ define.symbols <- function(dimension){
   symbol
 }
 
-formationPattern<-function(serie, dimension, delay, option){
-  n_symbols = i = 1
+
+FP <- function(n, dimension, delay){
+  dyn.load("FormationPatterns.so")
+  p <- .Call("FormationPatterns", n, dimension, delay)
+  p = t(p) + 1
+  return(p)
+}
+
+formationPattern <- function(serie, dimension, delay, option){
+  i = 1
   n = length(serie)
   p_patterns = elements = index2 = matrix(nrow=n,ncol=dimension)
-  index = c(0:(dimension-1)) 
-  while(i <= n){    
-    first = i
-    if((i+dimension-1)<=n){
-      index2[n_symbols,] = i:(i+dimension-1)
-      elements[n_symbols,] = serie[i:(i+dimension-1)]
-      p_patterns[n_symbols,] = index[order(elements[n_symbols,])]
-      i = first + delay
-      n_symbols = n_symbols + 1
-    }else break
+  index = c(0:(dimension-1))
+  
+  index2 = FP(length(serie), dimension, delay)
+  
+  while((i + ((dimension-1)*delay)) <= n){ 
+    elements[i,] = serie[index2[i,]]
+    p_patterns[i,] = index[order(elements[i,])]
+    i = i + 1
   }
+  
   if(option == 0){
     p_patterns = na.omit(p_patterns)
     return(p_patterns[1:dim(p_patterns)[1],])
@@ -92,6 +99,17 @@ transition.graph <- function(series, dimension, delay){
   graph = graph/(m-1)
   graph = as.vector(graph)
   return(graph)
+}
+
+TG <- function(series, dimension, delay){
+  patterns = formationPattern(series, dimension, delay, 0)
+  wedding = pattern.wedding(patterns)
+  size = length(wedding)
+  
+  dyn.load("TransitionGraph.so")
+  probability <- .Call("TransitionGraph", wedding, dimension, size)
+  
+  return(probability)
 }
 
 
@@ -175,7 +193,7 @@ TG.analysis <- function(){
   for(j in c(1:ns.guatemala)){
     img = getValuesBlock(sar_data, row = dimen.guatemala[j,1], nrows = dimen.guatemala[j,2], col = dimen.guatemala[j,3], ncols = dimen.guatemala[j,4], format = "matrix")
     ts = img[hilbertcurve]/max(img[hilbertcurve])
-    g = transition.graph(ts, n, tal)
+    g = TG(ts, n, tal)
     Entropy.Complexity[j, 1] <- shannonNormalized(as.vector(g))
     Entropy.Complexity[j, 2] <- Ccomplexity(as.vector(g))
     cat("Guatemala ", j, "\n")
@@ -185,7 +203,7 @@ TG.analysis <- function(){
   for(j in c(1:ns.canaveral.behavior1)){
     img = getValuesBlock(sar_data, row = dimen.canaveral.behavior1[j,1], nrows = dimen.canaveral.behavior1[j,2], col = dimen.canaveral.behavior1[j,3], ncols = dimen.canaveral.behavior1[j,4], format = "matrix")
     ts = img[hilbertcurve]/max(img[hilbertcurve])
-    g = transition.graph(ts, n, tal)
+    g = TG(ts, n, tal)
     Entropy.Complexity[ns.guatemala + j, 1] <- shannonNormalized(as.vector(g))
     Entropy.Complexity[ns.guatemala + j, 2] <- Ccomplexity(as.vector(g))
     cat("Cape 1 ", j, "\n")
@@ -195,7 +213,7 @@ TG.analysis <- function(){
   for(j in c(1:ns.canaveral.behavior2)){
     img = getValuesBlock(sar_data, row = dimen.canaveral.behavior2[j,1], nrows = dimen.canaveral.behavior2[j,2], col = dimen.canaveral.behavior2[j,3], ncols = dimen.canaveral.behavior2[j,4], format = "matrix")
     ts = img[hilbertcurve]/max(img[hilbertcurve])
-    g = transition.graph(ts, n, tal)
+    g = TG(ts, n, tal)
     Entropy.Complexity[(ns.canaveral.behavior1 + ns.guatemala) + j, 1] <- shannonNormalized(as.vector(g))
     Entropy.Complexity[(ns.canaveral.behavior1 + ns.guatemala) + j, 2] <- Ccomplexity(as.vector(g))
     cat("Cape 2 ", j, "\n")
@@ -205,7 +223,7 @@ TG.analysis <- function(){
   for(j in c(1:ns.munich)){
     img = getValuesBlock(sar_data, row = dimen.munich[j,1], nrows = dimen.munich[j,2], col = dimen.munich[j,3], ncols = dimen.munich[j,4], format = "matrix")
     ts = img[hilbertcurve]/max(img[hilbertcurve])
-    g = transition.graph(ts, n, tal)
+    g = TG(ts, n, tal)
     Entropy.Complexity[(ns.canaveral.behavior1 + ns.canaveral.behavior2 + ns.guatemala) + j, 1] <- shannonNormalized(as.vector(g))
     Entropy.Complexity[(ns.canaveral.behavior1 + ns.canaveral.behavior2 + ns.guatemala) + j, 2] <- Ccomplexity(as.vector(g))
     cat("Munich ", j, "\n")

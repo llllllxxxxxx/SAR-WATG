@@ -12,10 +12,10 @@ analysis.metrics <- function(){
   
   regions = c(rep("Forest",40), rep("Sea",80), rep("Urban", 40))
   split = 0.85
-  set.seed(123)
+  set.seed(12345678)
   n.total = 160
   
-  Entropy.Complexity.csv = read.csv(file="../Data/EntropyComplexitySL.csv",
+  Entropy.Complexity.csv = read.csv(file="../Data/EntropyComplexityWATG.csv",
                                     header=TRUE, sep=",")
   
   
@@ -70,6 +70,7 @@ analysis.metrics <- function(){
   metrics.calculated$sensitivity[1] = sum(diag(cm$table))/sum(cm$table)
   
   #############################################################################################
+  ctrl = trainControl(method="repeatedcv", number = 10, repeats = 10, savePredictions = T)
   
   Entropy.Complexity.D3T2 = data.frame("Entropy" = numeric(n.total),
                                        "Complexity" = numeric(n.total),
@@ -110,6 +111,7 @@ analysis.metrics <- function(){
   metrics.calculated$sensitivity[2] = sum(diag(cm$table))/sum(cm$table)
   
   #############################################################################################
+  ctrl = trainControl(method="repeatedcv", number = 10, repeats = 10, savePredictions = T)
   
   Entropy.Complexity.D3T3 = data.frame("Entropy" = numeric(n.total),
                                        "Complexity" = numeric(n.total),
@@ -151,6 +153,7 @@ analysis.metrics <- function(){
   metrics.calculated$sensitivity[3] = sum(diag(cm$table))/sum(cm$table)
   
   #############################################################################################
+  ctrl = trainControl(method="repeatedcv", number = 10, repeats = 10, savePredictions = T)
   
   Entropy.Complexity.D3T4 = data.frame("Entropy" = numeric(n.total),
                                        "Complexity" = numeric(n.total),
@@ -191,6 +194,7 @@ analysis.metrics <- function(){
   metrics.calculated$sensitivity[4] = sum(diag(cm$table))/sum(cm$table)
   
   #############################################################################################
+  ctrl = trainControl(method="repeatedcv", number = 10, repeats = 10, savePredictions = T)
   
   Entropy.Complexity.D3T5 = data.frame("Entropy" = numeric(n.total),
                                        "Complexity" = numeric(n.total),
@@ -231,6 +235,7 @@ analysis.metrics <- function(){
   metrics.calculated$sensitivity[5] = sum(diag(cm$table))/sum(cm$table)
   
   #############################################################################################
+  ctrl = trainControl(method="repeatedcv", number = 10, repeats = 10, savePredictions = T)
   
   Entropy.Complexity.D4T1 = data.frame("Entropy" = numeric(n.total),
                                        "Complexity" = numeric(n.total),
@@ -271,6 +276,7 @@ analysis.metrics <- function(){
   metrics.calculated$sensitivity[6] = sum(diag(cm$table))/sum(cm$table)
   
   #############################################################################################
+  ctrl = trainControl(method="repeatedcv", number = 10, repeats = 10, savePredictions = T)
   
   Entropy.Complexity.D4T2 = data.frame("Entropy" = numeric(n.total),
                                        "Complexity" = numeric(n.total),
@@ -311,6 +317,7 @@ analysis.metrics <- function(){
   metrics.calculated$sensitivity[7] = sum(diag(cm$table))/sum(cm$table)
   
   #############################################################################################
+  ctrl = trainControl(method="repeatedcv", number = 10, repeats = 10, savePredictions = T)
   
   Entropy.Complexity.D4T3 = data.frame("Entropy" = numeric(n.total),
                                        "Complexity" = numeric(n.total),
@@ -351,6 +358,7 @@ analysis.metrics <- function(){
   metrics.calculated$sensitivity[8] = sum(diag(cm$table))/sum(cm$table)
   
   #############################################################################################
+  ctrl = trainControl(method="repeatedcv", number = 10, repeats = 10, savePredictions = T)
   
   Entropy.Complexity.D4T4 = data.frame("Entropy" = numeric(n.total),
                                        "Complexity" = numeric(n.total),
@@ -391,6 +399,7 @@ analysis.metrics <- function(){
   metrics.calculated$sensitivity[9] = sum(diag(cm$table))/sum(cm$table)
   
   #############################################################################################
+  ctrl = trainControl(method="repeatedcv", number = 10, repeats = 10, savePredictions = T)
   
   Entropy.Complexity.D4T5 = data.frame("Entropy" = numeric(n.total),
                                        "Complexity" = numeric(n.total),
@@ -431,6 +440,7 @@ analysis.metrics <- function(){
   metrics.calculated$sensitivity[10] = sum(diag(cm$table))/sum(cm$table)
   
   #############################################################################################
+  ctrl = trainControl(method="repeatedcv", number = 10, repeats = 10, savePredictions = T)
   
   Entropy.Complexity.D5T1 = data.frame("Entropy" = numeric(n.total),
                                        "Complexity" = numeric(n.total),
@@ -471,6 +481,7 @@ analysis.metrics <- function(){
   metrics.calculated$sensitivity[11] = sum(diag(cm$table))/sum(cm$table)
   
   #############################################################################################
+  ctrl = trainControl(method="repeatedcv", number = 10, repeats = 10, savePredictions = T)
   
   Entropy.Complexity.D5T2 = data.frame("Entropy" = numeric(n.total),
                                        "Complexity" = numeric(n.total),
@@ -511,6 +522,7 @@ analysis.metrics <- function(){
   metrics.calculated$sensitivity[12] = sum(diag(cm$table))/sum(cm$table)
   
   #############################################################################################
+  ctrl = trainControl(method="repeatedcv", number = 10, repeats = 10, savePredictions = T)
   
   Entropy.Complexity.D5T3 = data.frame("Entropy" = numeric(n.total),
                                        "Complexity" = numeric(n.total),
@@ -551,6 +563,7 @@ analysis.metrics <- function(){
   metrics.calculated$sensitivity[13] = sum(diag(cm$table))/sum(cm$table)
   
   #############################################################################################
+  ctrl = trainControl(method="repeatedcv", number = 10, repeats = 10, savePredictions = T)
   
   Entropy.Complexity.D5T4 = data.frame("Entropy" = numeric(n.total),
                                        "Complexity" = numeric(n.total),
@@ -591,6 +604,7 @@ analysis.metrics <- function(){
   metrics.calculated$sensitivity[14] = sum(diag(cm$table))/sum(cm$table)
   
   #############################################################################################
+  ctrl = trainControl(method="repeatedcv", number = 10, repeats = 10, savePredictions = T)
   
   Entropy.Complexity.D5T5 = data.frame("Entropy" = numeric(n.total),
                                        "Complexity" = numeric(n.total),
@@ -631,6 +645,7 @@ analysis.metrics <- function(){
   metrics.calculated$sensitivity[15] = sum(diag(cm$table))/sum(cm$table)
   
   #############################################################################################
+  ctrl = trainControl(method="repeatedcv", number = 10, repeats = 10, savePredictions = T)
   
   Entropy.Complexity.D6T1 = data.frame("Entropy" = numeric(n.total),
                                        "Complexity" = numeric(n.total),
@@ -671,6 +686,7 @@ analysis.metrics <- function(){
   metrics.calculated$sensitivity[16] = sum(diag(cm$table))/sum(cm$table)
   
   #############################################################################################
+  ctrl = trainControl(method="repeatedcv", number = 10, repeats = 10, savePredictions = T)
   
   Entropy.Complexity.D6T2 = data.frame("Entropy" = numeric(n.total),
                                        "Complexity" = numeric(n.total),
@@ -711,6 +727,7 @@ analysis.metrics <- function(){
   metrics.calculated$sensitivity[17] = sum(diag(cm$table))/sum(cm$table)
   
   #############################################################################################
+  ctrl = trainControl(method="repeatedcv", number = 10, repeats = 10, savePredictions = T)
   
   Entropy.Complexity.D6T3 = data.frame("Entropy" = numeric(n.total),
                                        "Complexity" = numeric(n.total),
@@ -751,6 +768,7 @@ analysis.metrics <- function(){
   metrics.calculated$sensitivity[18] = sum(diag(cm$table))/sum(cm$table)
   
   #############################################################################################
+  ctrl = trainControl(method="repeatedcv", number = 10, repeats = 10, savePredictions = T)
   
   Entropy.Complexity.D6T4 = data.frame("Entropy" = numeric(n.total),
                                        "Complexity" = numeric(n.total),
@@ -791,6 +809,7 @@ analysis.metrics <- function(){
   metrics.calculated$sensitivity[19] = sum(diag(cm$table))/sum(cm$table)
   
   #############################################################################################
+  ctrl = trainControl(method="repeatedcv", number = 10, repeats = 10, savePredictions = T)
   
   Entropy.Complexity.D6T5 = data.frame("Entropy" = numeric(n.total),
                                        "Complexity" = numeric(n.total),
@@ -839,11 +858,12 @@ plot.dimension.tau <- function(metrics.calculated){
   point.shape = c(rep(15,5), rep(16,5), rep(17,5), rep(18,5))
   line.shape = c(rep(2,5), rep(3,5), rep(4,5), rep(5,5))
   tau = rep(c(1,2,3,4,5), 4)
+  
   D = factor(D)
   Tau = factor(tau)
   
   
-  metrics.calculated = read.csv("../Data/metricsCalculated.csv")
+  metrics.calculated.csv = read.csv("../Data/metricsCalculated.csv")
 
   rainbow_colors = palette(c("#A80055",
                              "#B18FCF",
@@ -868,7 +888,7 @@ plot.dimension.tau <- function(metrics.calculated){
     legend.names = rep(c("t = 1","t = 2", "t = 3", "t = 4", "t = 5"), 4)
 
      png("ROC.png", width = 650, height = 450)
-     ROC.curve =  ggplot(data = metrics.calculated,
+     ROC.curve =  ggplot(data = metrics.calculated.csv,
                          aes(x = FPR, y = TPR,
                              group = D, shape = D, color = D)) + 
        #geom_text(aes(label = legend.names), size = 2.5, hjust=1, vjust=2.5) +
