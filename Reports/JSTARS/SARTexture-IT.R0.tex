@@ -3,7 +3,7 @@
 \usepackage{subfigure}
 \usepackage{setspace}
 \usepackage[labelsep=period]{caption}  
-\usepackage[british]{babel} 
+\usepackage[english]{babel} 
 \usepackage{amsfonts,amsmath,bm,bbm}
 \usepackage{hyperref} 
 \usepackage{graphicx,xurl}
@@ -16,6 +16,7 @@
 \usepackage{color}
 \usepackage{multicol}
 \usepackage{float}
+\usepackage{siunitx}
 
 \renewcommand{\Bbb}{\mathbb}
 
@@ -68,15 +69,15 @@
 
 \title{Analysis and Classification of SAR Textures using Information Theory}
 
-\author{Eduarda~T.~C.~Chagas,%\orcidA{}
+\author{Eduarda~T.~C.~Chagas, %\orcidA{}
         Alejandro~C.~Frery, %\orcidB{}
         \IEEEmembership{IEEE~Senior~Member,}
         Osvaldo~A.~Rosso, %\orcidC{}
         and~Heitor~S.~Ramos %\orcidD{}
         
-        \thanks{E. T. C. and H. S. Ramos are with Departamento de Ci\^encia da Computa\c c\~ao, Universidade Federal de Minas Gerais, Belo Horizonte, Minas Gerais, Brazil (e-mail: eduarda.chagas@dcc.ufmg.br, ramosh@dcc.ufmg.br).}
-        \thanks{A. C. Frery is with Laborat\'orio de Computa\c c\~ao Cient\'ifica e An\'alise Num\'erica -- LaCCAN, Universidade Federal de Alagoas, Brasil; (e-mail: acfrery@laccan.ufal.br)}
-        \thanks{O. A. Rosso is with Instituto de F\'isica, Universidade Federal de Alagoas, Brasil (e-mail: oarosso@if.ufal.br)}
+        \thanks{E.\ T.\ C.\ and H.\ S.\ Ramos ar with Departamento de Ci\^encia da Computa\c c\~ao, Universidade Federal de Minas Gerais, Belo Horizonte, Minas Gerais, Brazil (e-mail: eduarda.chagas@dcc.ufmg.br, ramosh@dcc.ufmg.br).}
+        \thanks{A.\ C.\ Frery is with Laborat\'orio de Computa\c c\~ao Cient\'ifica e An\'alise Num\'erica -- LaCCAN, Universidade Federal de Alagoas, Brasil; (e-mail: acfrery@laccan.ufal.br)}
+        \thanks{O.\ A.\ Rosso is with Instituto de F\'isica, Universidade Federal de Alagoas, Brasil (e-mail: oarosso@if.ufal.br)}
         \thanks{Manuscript received XX YY, 20ZZ; revised WW UU, 20VV.}}
 
 
@@ -87,64 +88,68 @@
 \maketitle
 
 \begin{abstract}
-   We propose a new technique for SAR image texture analysis and classification based on the Bandt-Pompe symbolization.
+   We propose a new technique texture analysis and classification based on the Bandt-Pompe symbolization, and we apply it to SAR data.
    It consists of
    (i)~linearize a 2-D patch of the image using the Hilbert-Peano curve,
    (ii)~build an Ordinal Pattern Transition Graph that considers the data amplitude encoded into the weight of the edges;
    (iii)~obtain a probability distribution function derived from this graph;
    (iv)~compute Information Theory descriptors (Permutation Entropy and Statistical Complexity) from this distribution, and use them as features to feed a classifier.
-   The ordinal pattern graph we propose considers that the weight of the edges is related to the absolute difference of observations, which encodes the information about the data amplitude. This modification takes into account the scattering properties of the target and leads to a reasonable characterization of several types of textures.
-   Experiments with data from Munich urban areas, Guatemala forest regions, and Cape Canaveral ocean samples demonstrate the effectiveness of our technique, which achieves satisfactory levels of separability.
-   The two descriptors chosen in this work are easy and quick to calculate and are used as input for a  k-nearest neighbor classifier.
-   Experiments show that this technique presents results similar to state-of-the-art techniques that require a much larger number of features and consequently require a higher computational cost.
+   The ordinal pattern graph we propose considers that the weight of the edges is related to the absolute difference of observations, which encodes the information about the data amplitude. 
+   This modification takes into account the scattering properties of the target and leads to the characterization of several types of textures.
+   Experiments with data from Munich urban areas, Guatemala forest regions, and Cape Canaveral ocean samples show the effectiveness of our technique, which achieves satisfactory levels of separability.
+   The two descriptors chosen in this work are easy and quick to calculate and are used as input for a k-nearest neighbor classifier.
+   Experiments show that this technique presents results similar to state-of-the-art techniques that employ a much larger number of features and, consequently, require a higher computational cost.
 \end{abstract}
 
 \begin{IEEEkeywords}
-Synthetic Aperture Radar (SAR), Time-series, Terrain ,Classification, Ordinal Patterns Transition Graphs.
+Synthetic Aperture Radar (SAR), 
+Time-series, 
+Texture, 
+Classification, 
+Ordinal Patterns Transition Graphs.
 \end{IEEEkeywords}
 
 \IEEEpeerreviewmaketitle
 
 \section{Introduction}
 
-\IEEEPARstart{L}{and} cover maps of remote sensing data are the most used earth observation (OE) products of remote sensing applications. In this context, the use of SAR (Synthetic Aperture Radar) systems, which can provide high-resolution images in all weather and day-night conditions, is particularly promising.
+\IEEEPARstart{L}{and} cover maps of remote sensing data are the most used earth observation (OE) products of remote sensing applications. 
+In this context, the use of SAR (Synthetic Aperture Radar) systems, which can provide high-resolution images in all weather and day-night conditions, is particularly useful.
 Surface classification and land use are among the most critical applications of SAR images, and the development of efficient strategies to cope with this problem is an ongoing research topic~\cite{Pottier2004Unsupervised}, for which supervised and unsupervised classification algorithms have been proposed~\cite{han2020unsupervised,huang2020classification,xie2020polsar}.
-Such methods can be generally divided into two categories: methods based on SAR image statistical information and methods based on textural information~\cite{guan2019covariance}.
+Such methods can be divided into two categories: methods based on SAR image statistical information, and methods based on textural information~\cite{guan2019covariance}.
 
 Extraction and analysis of characteristics are crucial steps in the classification of regions, along with additional information and previous knowledge about the scene, the sensor, and the acquisition conditions.
-The study of SAR textures reveals more information about the target under analysis, being extremely important to characterize it quantitatively.
+The study of SAR textures reveals useful information about the target under analysis, being extremely important to characterize it quantitatively.
 
-The tonal values in a synthetic aperture radar (SAR) image represent point measurements of the backscatter coefficient and are related to radar wavelength and interaction with elements in the scene.
-Through textural information, we acquire data from the spatial distribution of gray levels of the image and statistics about it.
+The tonal values in a synthetic aperture radar (SAR) image represent point measurements of the backscatter coefficient, and are related to the radar wavelength and to the interaction with the elements in the scene.
+Through textural information, we acquire data from the spatial distribution of gray levels of the image and statistics about it~\cite{AGeneralizedGaussianCoherentScattererModelforCorrelatedSARTexture}.
 
-The study of textures in remote sensing presents some peculiarities concerning the analysis of isolated patterns since the texture represents only part of the scene under investigation, and it is necessary to consider micro and macro-textural structures of the image during the characterization.
+The study of textures in remote sensing presents peculiarities concerning the analysis of isolated patterns since the texture represents only part of the scene under investigation, and it is necessary to consider micro and macro-textural structures of the image during the characterization.
 However, texture analysis in SAR images provides essential information in addition to image gray levels or backscatter values and demonstrates improvements in accuracy in surface characterization due to the structural properties of different regions.
  
-SAR textures can be studied following two approaches, analyzing the marginal properties of the data and observing their spatial structure~\cite{numbisi2018multi}.
+SAR textures can be studied following two approaches, analyzing the marginal properties of the data and observing their spatial structure~\cite{AGeneralizedGaussianCoherentScattererModelforCorrelatedSARTexture,numbisi2018multi}.
 In this work, we focus on the second.
 
-In the existing literature, resource extraction followed by classification have often been applied, becoming the two significant steps that formed the basis for the analysis of satellite images~\cite{feng2014amplitude}.
+In the existing literature, feature extraction followed by classification have often been applied, becoming the two significant steps that formed the basis for the analysis of satellite images~\cite{feng2014amplitude}.
 Different measures of texture proved to be essential for satellite images to derive the spatial contour of the surface, the arrangement and other varieties of soil properties.
 
 The most widely used approach to obtain textural features from SAR imagery is through co-occurrence matrices and Haralick's descriptors~\cite{yu2019detection}.
-In \cite{radford2018geological},  the application of machine learning for geological mapping in remote and inaccessible localities is validated using  Random Forests and textural information derived from gray-level co-occurrence matrices obtaining an accuracy of $\approx90\%$ even when using limited training data ($\approx0.15\%$ of total data). 
-In \cite{hagensieker2018evaluation}, the synergistic contribution of multi-temporal L-, C-, and X-band data to tropical land cover mapping is evaluated, comparing classification outcomes of ALOS-2~\cite{kankaku2013alos}, RADARSAT-2~\cite{morena2004introduction}, and TerraSAR-X~\cite{breit2009terrasar} 
-%\todo[inline]{Incluir referências para os datasets}
-%DONE
+Radford et al.~\cite{radford2018geological} used textural information derived from gray-level co-occurrence matrices, along with Random Forests, for geological mapping of remote and inaccessible localities; the authors obtained an accuracy of $\approx\SI{90}{\percent}$, even when using limited training data ($\approx\SI{0.15}{\percent}$ of the total data). 
+%
+Hagensieker and Waske~\cite{hagensieker2018evaluation} evaluated the synergistic contribution of multi-temporal L-, C-, and X-band data to tropical land cover mapping, comparing classification outcomes of ALOS-2~\cite{kankaku2013alos}, RADARSAT-2~\cite{morena2004introduction}, and TerraSAR-X~\cite{breit2009terrasar} 
 datasets for a study site in the Brazilian Amazon using a wrapper approach. 
 The wrapper utilizes the gray-level co-occurrence matrix (GLCM)
-%\todo{esse termo é novo, tem que itnroduzir o acrônimo}
-%DONE
 texture information and a  Random Forest classifier to estimate scene importance. 
-In \cite{storie2018urban}, an open-source workflow for detecting and delineating the urban-rural boundary is proposed, using Sentinel-1a SAR data.
-A combination of GLCM information and a k-means classifier is used to produce a three-category map that distinguishes urban from rural areas. 
+%
+Storie~\cite{storie2018urban} proposed an open-source workflow for detecting and delineating the urban-rural boundary using Sentinel-1a SAR data.
+The author used a combination of GLCM information and a k-means classifier to produce a three-category map that distinguishes urban from rural areas. 
 Other approaches include the Fourier power  spectrum~\cite{Florindo2012Fractal}, and random fields~\cite{zhu2016antarctic}.
 
 In our approach, we opt to analyze the 1-D signals resulting from the linearization of the image samples, using non-parametric time series analysis techniques.
-By selecting this line of research, we reduce the dimensionality of the data and map the spatial dependence of the pixels to a temporal correlation of a data sequence.
-Next, we extract a probability distribution from the ordinal patterns of a new transition graph, herein proposed,  which can discriminate different levels of amplitude, and we use well-known features borrowed from the information theory field to classify texture patches.
+With this approach, we reduce the dimensionality of the data and map the spatial dependence of the pixels onto the temporal correlation of a time series.
+Next, we extract a probability distribution from the ordinal patterns of a new transition graph, herein proposed, which can discriminate different levels of amplitude, and we use well-known features borrowed from the Information Theory field to classify texture patches.
 	
-The main contribution of this work is the proposal of a new set of features for characterization and classification of SAR textures, based on a modification of the current ordinal patterns transition graph, incorporating important time-series information.
+The main contribution of this work is the proposal of a new set of features for characterization and classification of SAR textures, based on a modification of the current ordinal patterns transition graph, incorporating relevant time-series information.
 Our proposal, hereinafter referred to as Weighted Amplitude Transition Graph (WATG), incorporates the absolute difference between the observations, weighting them in the calculation of the final value of their probabilities.
 Experiments performed on SAR image textures indicate that this approach preserves essential information about the dynamics of the system, presenting excellent results in the classification of regions, where it has reached satisfactory levels of separability.
 
@@ -155,9 +160,11 @@ Section~\ref{methodology} describes our proposed methodology.
 Section~\ref{linearization} presents the patch linearization process of the images.
 Section~\ref{WATG} shows our technique of ordinal amplitude transition graph weighting by amplitudes.
 In Section~\ref{HC} we report the Information Theory descriptors used throughout this work.
-SAR image dataset, the analysis of ordinal pattern methods, experiments of sliding window selection and quantitative evaluation are described in~\ref{Results}.
-Finally, section~\ref{Conclusion} concludes the paper.
-
+Section~\ref{Results} describe the SAR image datasets, 
+the analysis of ordinal pattern methods, 
+experiments of sliding window selection, and a
+quantitative assessment.
+Finally, Section~\ref{Conclusion} concludes the paper.
 
 \section{Methodology}\label{methodology}
 
