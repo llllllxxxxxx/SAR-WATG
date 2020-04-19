@@ -68,9 +68,9 @@
 
 \title{Analysis and Classification of SAR Textures using Information Theory}
 
-\author{Eduarda~T.~C.~Chagas%\orcidA{}
-        , Alejandro~C.~Frery %\orcidB{}
-        ,~\IEEEmembership{IEEE~Senior~Member,}
+\author{Eduarda~T.~C.~Chagas,%\orcidA{}
+        Alejandro~C.~Frery, %\orcidB{}
+        \IEEEmembership{IEEE~Senior~Member,}
         Osvaldo~A.~Rosso, %\orcidC{}
         and~Heitor~S.~Ramos %\orcidD{}
         
@@ -89,10 +89,10 @@
 \begin{abstract}
    We propose a new technique for SAR image texture analysis and classification based on the Bandt-Pompe symbolization.
    It consists of
-   (i)~linearizate a 2-D patch of the image data using the Hilbert-Peano curve,
+   (i)~linearize a 2-D patch of the image using the Hilbert-Peano curve,
    (ii)~build an Ordinal Pattern Transition Graph that considers the data amplitude encoded into the weight of the edges;
    (iii)~obtain a probability distribution function derived from this graph;
-   (iv)~compute Information Theory descriptors (Permutation Entropy and Statistical Complexity) from this distribution and use them as features to feed a classifier.
+   (iv)~compute Information Theory descriptors (Permutation Entropy and Statistical Complexity) from this distribution, and use them as features to feed a classifier.
    The ordinal pattern graph we propose considers that the weight of the edges is related to the absolute difference of observations, which encodes the information about the data amplitude. This modification takes into account the scattering properties of the target and leads to a reasonable characterization of several types of textures.
    Experiments with data from Munich urban areas, Guatemala forest regions, and Cape Canaveral ocean samples demonstrate the effectiveness of our technique, which achieves satisfactory levels of separability.
    The two descriptors chosen in this work are easy and quick to calculate and are used as input for a  k-nearest neighbor classifier.
