@@ -175,7 +175,8 @@ The main contribution of this work is the proposal of a new set of features for 
 Our proposal, hereinafter referred to as Weighted Amplitude Transition Graph (WATG), incorporates the absolute difference between the observations, weighting them in the calculation of the final value of their probabilities.
 Experiments performed on SAR image textures indicate that this approach preserves essential information about the dynamics of the system, presenting excellent results in the classification of regions, where it has reached satisfactory levels of separability.
 
-\todo[inline]{acho que falta 'sal' nessa introdução. Os primeiros parágrafos não parecem ter relações muito fortes que induzam um encadeamento lógico do problema a ser tratado.}
+%\todo[inline]{acho que falta 'sal' nessa introdução. Os primeiros parágrafos não parecem ter relações muito fortes que induzam um encadeamento lógico do problema a ser tratado.}
+%%% ACF Espero que o acarajé não tenha ficado indigesto
 
 The paper is structured as follows:
 Section~\ref{methodology} describes our proposed methodology.
@@ -190,29 +191,40 @@ Finally, Section~\ref{Conclusion} concludes the paper.
 
 \section{Methodology}\label{methodology}
 
-\begin{figure}[!h]
+Our methodology consists of the following steps:
+%%% ACF Melhor na forma de algoritmo, com o "patch" como entrada, e o ponto no plano HxC como saída.
+\begin{enumerate}
+	\item \label{item:texture} Extract the patch of interest;
+	\item\label{item:Linearlize} Linearize the patch using the Hilbert-Peano curve;
+	\item \label{item:Procedure} Obtain the Weighted Amplitude Transition Graph (WATG):
+		\begin{enumerate}
+			\item \label{item:Symbolization} Transform the time series into a sequence of ordinal patterns with the Bandt-Pompe symbolization;
+			\item Compute the transition graph between ordinal patterns;
+			\item Weight the transitions proportionally to the difference of values.
+		\end{enumerate}
+	\item \label{item:WATG} Obtain the probability distribution function associated with the WATG;
+	\item\label{item:Descriptors} Compute the Entropy and Statistical Complexity of this distribution.
+\end{enumerate}
+The feature obtained in the last step can be used either for characterization or classification.
+We show the usefulness of this approach by classifying labeled patches.
+These steps are depicted in Fig.~\ref{fig:WATG}, and are detailed in the following.
+
+\begin{figure}[hbt]
 	\centering
-	\includegraphics[scale = 0.7]{Figures/methodology.pdf}
+	\includegraphics[width=.7\columnwidth]{Figures/methodology.pdf}
 	\caption{Outline of the methodology used for the classification of textures.}
 	\label{fig:WATG}
 \end{figure}
-
-Our methodology consists of the following steps:
-\begin{enumerate}
-        \item \label{item:texture} extract the HHHH backscatter magnitudes of quad-polarimetric L-band SAR image, obtaining the image texture;
-       \item\label{item:Linearlize} linearize a 2-D patch of data using the Hilbert-Peano curve;
-        \item \label{item:Symbolization} employ the Bandt-Pompe symbolization to generate the set of ordinal patterns for each data sequence;
-       \item\label{item:WOPTG} build the Ordinal Pattern Transition Graph with weighted edges to obtain a probability distribution function derived from this graph;
-       \item\label{item:Descriptors} compute the Entropy and Statistical Complexity of this distribution and, finally, classify  regions.
-\end{enumerate}
-These steps are depicted in Fig.~\ref{fig:WATG}, and are detailed in the following.
+%%% ACF "Patch" ao invés de de "Texture"
+%%% ACF "Vector of observations"
+%%% ACF "Feature in the HxC plane" (último bloco)
 
 \subsection{Linearization of image patches}\label{linearization}
 
-In this step, we perform a data dimensionality reduction by turning 2-D patches into 1-D signals.
-For this, we opt to do a linearization of the data through techniques that maintain the spatial correlation of the image.
-This could be accomplished by reading the data by lines, columns, or any transformation.
-In Step~\ref{item:Linearlize} we employ the Hilbert-Peano curve~\cite{Lee1994Texture}.
+In this step, we perform a data dimensionality reduction by turning the 2-D patch into a times series, i.e., a 1-D signal.
+%For this, we opt to do a linearization of the data through techniques that maintain the spatial correlation of the image.
+This could be accomplished by reading the data by lines, columns, or any transformation of 2-D indexes into a sequence of integers.
+We propose using the Hilbert-Peano curve~\cite{Lee1994Texture}.
 
 Nguyen et al.~\cite{nguyen1982space} firstly employed Space-filling curves,
 %\todo[inline]{isso não era para ser uma citação?}
@@ -221,12 +233,14 @@ to map texture into a one-dimensional signal.
 When used as scanning methods of an image, such functions preserve relevant properties of pixel spatial correlation~\cite{Lee1994Texture}.
 
 Carincotte et al.~\cite{UnsupervisedChangeDetectiononSARImagesUsingFuzzyHiddenMarkovChains} used the Hilbert-Peano curve in the problem of change detection in pairs of SAR images.
-The authors noted that it exploits the spatial locality and that its pseudo-randomness
-\todo[inline]{não entendi essa parte. pseudo-randomness of direction changes?}
- of direction changes works well for a large family of images, especially
+The authors noted that this transformation exploits the spatial locality and that its pseudo-randomness
+%\todo[inline]{não entendi essa parte. pseudo-randomness of direction changes?}
+%%% ACF O conceito é "fuzzy", mas eu concordo (nebulosamente); os autores afirmam isso.
+of direction changes works well for a large family of images, especially
 natural ones.
 
-Assuming an image patch is supported by a $N \times N$ dimension grid, where $N$ is a power of $2$, we have the following definition.
+Assuming an image patch is supported by an $N \times N$ grid, we have the following definition.
+%%% ACF Poderia ser MxN, para ficar mais geral, desde que M não seja usado mais adiante. Tornamos a técnica específica ao falar da Hillbert-Peano.
 
 \newtheorem{mydef}{Definition}
 \begin{mydef}
@@ -234,13 +248,12 @@ Assuming an image patch is supported by a $N \times N$ dimension grid, where $N$
    A scan rule is $\{f^{-1}(1), \dots, f^{-1}(N^2)\}$.
    \label{def:CurveFilling}
 \end{mydef}
-This Definition imposes that each pixel is visited only once.
+This Definition imposes that each pixel is visited only once, and that all pixels are visited.
 
 Space-filling curves, such as raster-1, raster-2, and Hilbert-Peano scanning techniques, stipulate a proper function $f$.
 Hilbert-Peano curves scan an array of pixels of dimension $2^k \times 2^k$, $k \in \mathbb{N}$, never keeping the same direction for more than three consecutive points, as shown in Fig.~\ref{fig:Hilbert}.
-Using the Hilbert-Peano curve, we can reduce the data dimensionality by maintaining the spatial dependence information of the analyzed textures.
-In this work, we use only the Hilbert-Peano Curves scale in images of dimension $128 \times 128$.
-
+Using the Hilbert-Peano curve, we reduce the data dimensionality by maintaining the spatial dependence information of the patch.
+In this work, we use patches of size $128 \times 128$.
 
 \begin{figure}[hbt]
 	\centering
@@ -254,11 +267,12 @@ In this work, we use only the Hilbert-Peano Curves scale in images of dimension 
 
 \subsection{Weighted Ordinal Patterns Transition Graph}\label{WATG}
 
+%%% ACF Reescrever depois de colocar os passos em forma de algoritmo
 Step~\ref{item:WOPTG} consists of two stages.
 In the first, the time series is transformed into a sequence of ordinal patterns.
 In the second, we build a weighted graph describing the transitions between these patterns.
 
-The representation of time series by ordinal patterns was introduced by~\cite{Bandt2002Permutation} as a transformation resistant to noise, and invariant to nonlinear monotonic transformations.
+The representation of time series by ordinal patterns was introduced by Bandt and Pompe~\cite{Bandt2002Permutation} as a transformation resistant to noise, and invariant to nonlinear monotonic transformations.
 
 Consider ${\mathcal X} \equiv \{x_t\}_{t=1}^{T}$ a real valued time series of length $T$. 
 
@@ -275,7 +289,7 @@ with embedding dimension $D \geq 2$ and time delay $\tau \geq 1$ ($\tau \in {\Bb
 %
 for $t = 1,2,\dots,N$ with $N = T-(D-1) \tau$.
 Then the vector ${\mathbf X}^{(D,\tau)}_t$ can be mapped to a symbol vector ${\bm \pi}_t^D \in {\mathfrak A}_{D}$. 
-This mapping should be defined in a way that preserves the desired relation between the elements 
+This mapping is such that preserves the desired relation between the elements 
 $x_t  \in {\mathbf X}^{(D,\tau)}_t$, and all $t \in \{1,\dots,T-(D-1)\tau\}$ that share this pattern (also called ``motif'') have to be mapped to the same 
 ${\bm \pi}_t^{D}$.
 
@@ -294,10 +308,11 @@ In this case, $\mathbf X_{1}^{(5,2)}= (1.8, 3.2, 4.2, 2.3, 1.2)$, and the corres
 	\caption{Illustration of the Bandt and Pompe coding\label{Fig:IntroBP}}
 \end{figure}
 
+%%% ACF Acho melhor organizar o fluxo de ideias. Primeiro esgota-se B&P, depois fala-se do grafo de transições, e só depois aparecem os pesos. Idealmente, cada parte fará referência a um passo do algoritmo.
 The classical approach consists in analyzing the histogram of these patterns.
 Alternatively, one may form an oriented graph with the transitions from $\widetilde\pi_t^D$ to $\widetilde\pi_{t+1}^D$. 
-We modify this last approach by assigning weights to the edges related to the absolute difference of the observations.
-This modification takes into account the scattering properties of the target, and leads to a good characterization of several types of textures.
+We modify this approach by assigning weights to the edges related to the absolute difference of the observations.
+This modification takes into account the scattering properties of the target, and leads to a good characterization of the textures of interest.
 
 Denote $\Pi$ the sequence of symbols obtained by a given series $\mathbf{X}_t^{(D,\tau)}$.
 The Bandt-Pompe probability distribution is the relative frequency of symbols in the series against $D!$ possible permutations of patterns $\{\widetilde\pi_t^D \}_{t = 1}^{D!}$:
@@ -315,7 +330,8 @@ The Bandt-Pompe probability distribution is the relative frequency of symbols in
 \begin{equation}
    p(\widetilde\pi_t^D) = \frac{\#\left \{\mathbf{X}_t^{(D,\tau)} \text{ is of type } \widetilde\pi_t^D\right \}}{T- (D-1)\tau},  
 \end{equation}
-where  $t\in \{1, \dots, T-(D-1)\tau\}$,that meets the conditions $p(\widetilde\pi_t^D) \ge 0$ and  $\sum_{i=1}^{D!} p(\widetilde\pi_t^D) = 1$.
+where  $t\in \{1, \dots, T-(D-1)\tau\}$.
+These probabilities meet the conditions $p(\widetilde\pi_t^D) \ge 0$ and  $\sum_{i=1}^{D!} p(\widetilde\pi_t^D) = 1$.
 
 The Ordinal Pattern Transition Graph ${G} = ({V}, {E})$ 
 represents the transitions between two consecutive ordinal patterns over time $t$.
@@ -329,9 +345,10 @@ Therefore, data with different amplitudes but with similar variance dynamics are
 
 To counterbalance these facts, we propose a modification of the current ordinal pattern transition graph by incorporating meaningful time series information.
 
-Two approaches are considered in relation to the weight of edges in the literature.
-Some authors employ unweighted edge~\cite{McCullough2015lagged,Kulp2016ordinal} representing only the existence of such transitions, while others apply the frequency of transitions~\cite{Sorrentino2015periodic,Zhang2017ConstructingOP}.
-The weights $\mathbb{W} = \{w_{v_{\widetilde{\pi}^D_i}, v_{\widetilde\pi^D_j}}: v_{\widetilde\pi^D_i}, v_{\widetilde\pi^D_j} \in V \}$ assigned to each edge describes the chance of transition between two particular patterns $(v_{\widetilde\pi^D_i}, v_{\widetilde\pi^D_j})$ calculated by their respective relative frequencies, ie:
+The literature reports two approaches to compute the weight of edges.
+Some authors employ unweighted edges~\cite{McCullough2015lagged,Kulp2016ordinal} which represent only the existence of transitions, while others apply the frequency of transitions~\cite{Sorrentino2015periodic,Zhang2017ConstructingOP}.
+The weights $\mathbb{W} = \{w_{v_{\widetilde{\pi}^D_i}, v_{\widetilde\pi^D_j}}: v_{\widetilde\pi^D_i}, v_{\widetilde\pi^D_j} \in V \}$ assigned to each edge describe the chance of transitions between the patterns $(v_{\widetilde\pi^D_i}, v_{\widetilde\pi^D_j})$
+The weights are calculated as the relative frequency of each transition, i.e., as:
 \begin{equation}
 w_{v_{\widetilde\pi^D_i}, v_{\widetilde\pi^D_j}} = \frac{|\Pi_{\widetilde\pi^D_i,\widetilde\pi^D_j}|}{T-(D-1)\tau-1},
 \end{equation}
@@ -355,6 +372,7 @@ Each $\mathbf{X}^{(D, \tau)}_t$ vector is associated with a weight $\beta_t$ tha
 \end{equation}
 where $x_i, x_j \in \mathbf{X}^{(D, \tau)}_t$.
 
+%%% ACF Não podemos voltar ao "tradicional". O texto tem que apresentar primeiro o tradicional, e depois a contribuição
 Traditionally, the transition graph assigns uniform weight to each transition between patterns and normalizes the result obtained by dividing by the total transitions.
 In our proposal, %the $w_{v_{\widetilde\pi^D_i}, v_{\widetilde\pi^D_j}}$
  weights assigned to each edge depict the amplitude difference observed in the transition.
@@ -365,7 +383,7 @@ w_{v_{\widetilde \pi^D_i}, v_{\widetilde \pi^D_j}} =  \sum_{i : \{\mathbf{X}^{(D
 Thus, the probability distribution taken from the weighted amplitude transition graph is given as follows:	
 \begin{align}
 &\left\{\begin{array}{l}
-\lambda_{v_{\widetilde\pi^D_i}, v_{\widetilde\pi^D_j}} = 1, \text{ if } (v_{\widetilde\pi^D_i}, v_{\widetilde\pi^D_j}) \in {E} \\
+\lambda_{v_{\widetilde\pi^D_i}, v_{\widetilde\pi^D_j}} = 1, \text{ if } (v_{\widetilde\pi^D_i}, v_{\widetilde\pi^D_j}) \in {E}, \\
 \lambda_{v_{\widetilde\pi^D_i}, v_{\widetilde\pi^D_j}} = 0, \text{ otherwise}.
 \end{array}\right. \\
 %
@@ -457,7 +475,7 @@ When considering the dynamics of alternating between consecutive patterns in a s
 On the other hand, adding the magnitude of the pixel intensity in the calculation of the weights, we changed the priority of the transitions, increasing the importance of edges that represent the greatest amplitude variations along the sequence and decreasing (or erasing) the importance of others as it can be seen in Fig.~\ref{fig:example} c).\todo[inline]{Aqui precisa destacar no grafo o que acontece, ou seja, indicar as mudanças e quais os impactos delas no problema tratado.}
 In this way, we were able to obtain, for this experiment, a perfect characterization and, consequently, the high descriptive power of the regions.
 
-\begin{figure*}[!h]
+\begin{figure*}[hbt]
 	\includegraphics[width=2\columnwidth]{Figures/example.pdf}
 	\caption{Main steps of the proposed method: 
 	(1)~ Get samples of SAR texture images from different regions,
@@ -535,7 +553,7 @@ We can also observe that GLCM is not able to have high descriptive power in the 
 In addition, it is observed that the highest success rate was obtained by the proposed method, which provided results comparable to the Gabor filters that acquired OA $= 100\%$ and F1-score $= 100\%$.
 Thus, when applying WATG we managed to maintain the success rate using fewer features and, consequently, less computational power since only two descriptors were used in the characterization. {\color{red}Our method is also less susceptible to the so-called curse of the dimensionality when compared to the use of Gabor Filters.}
 
-\begin{table*}[!h]
+\begin{table*}[hbt]
 \centering
 \caption{Experimental results using KNN}
 \label{tab:result1}
