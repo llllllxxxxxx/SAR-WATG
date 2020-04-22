@@ -113,28 +113,50 @@ Ordinal Patterns Transition Graphs.
 
 \section{Introduction}
 
-\IEEEPARstart{L}{and} cover maps of remote sensing data are the most used earth observation (OE) products of remote sensing applications. 
-In this context, the use of SAR (Synthetic Aperture Radar) systems, which can provide high-resolution images in all weather and day-night conditions, is particularly useful.
-Surface classification and land use are among the most critical applications of SAR images, and the development of efficient strategies to cope with this problem is an ongoing research topic~\cite{Pottier2004Unsupervised}, for which supervised and unsupervised classification algorithms have been proposed~\cite{han2020unsupervised,huang2020classification,xie2020polsar}.
-Such methods can be divided into two categories: methods based on SAR image statistical information, and methods based on textural information~\cite{guan2019covariance}.
+\IEEEPARstart{T}{exture} is an elusive trait.
+When dealing with remotely sensed images, the texture of different patches carries relevant information that, more often than not, is hard to quantify and to transform into useful and parsimonious features.
+This may be due to the fact that texture, in this context, is a synesthesic phenomenon that triggers tactile responses from visual inputs.
+This paper presents a new way of extracting features from textures, both natural and resulting from anthropic processes, in SAR (Synthetic Aperture Radar) imagery.
 
-Extraction and analysis of characteristics are crucial steps in the classification of regions, along with additional information and previous knowledge about the scene, the sensor, and the acquisition conditions.
-The study of SAR textures reveals useful information about the target under analysis, being extremely important to characterize it quantitatively.
+SAR systems are a vital source of data because they provide high-resolution images in almost all weather and day-night conditions.
+They provide basilar information, complementary to that offered by sensors that operate in other regions of the electromagnetic spectrum, for a variety of Earth Observation applications.
 
-The tonal values in a synthetic aperture radar (SAR) image represent point measurements of the backscatter coefficient, and are related to the radar wavelength and to the interaction with the elements in the scene.
-Through textural information, we acquire data from the spatial distribution of gray levels of the image and statistics about it~\cite{AGeneralizedGaussianCoherentScattererModelforCorrelatedSARTexture}.
+SAR data are rich in information, although with challenging characteristics.
+Most notably, they do not follow the usual Gaussian additive model, and the signal-to-noise ratio is usually low.
 
-The study of textures in remote sensing presents peculiarities concerning the analysis of isolated patterns since the texture represents only part of the scene under investigation, and it is necessary to consider micro and macro-textural structures of the image during the characterization.
-However, texture analysis in SAR images provides essential information in addition to image gray levels or backscatter values and demonstrates improvements in accuracy in surface characterization due to the structural properties of different regions.
- 
-SAR textures can be studied following two approaches, analyzing the marginal properties of the data and observing their spatial structure~\cite{AGeneralizedGaussianCoherentScattererModelforCorrelatedSARTexture,numbisi2018multi}.
+Yue et al~\cite{AGeneralizedGaussianCoherentScattererModelforCorrelatedSARTexture} provide a comprehensive account of how the physical properties of the target are translated into first- and second-order statistical properties of SAR intensity data.
+
+There is general agreement that non-deterministic textures are encoded in the second-order features, i.e., in the spatial correlation structure.
+This notion often leads to using the covariance matrix and other measures that assume that a linear dependence, namely the Pearson  correlation coefficient, suffices to characterize natural textures.
+
+For the aforementioned reasons, this might not be the case when dealing with SAR imagery.
+Texture, in these images, is often visible in only over large areas, and the multiplicative and non-Gaussian nature of speckle antagonizes with the additive assumption that underlies classical approaches.
+
+SAR textures can be studied following two complementary approaches, namely analyzing the marginal properties of the data (first-order statistics), and observing their spatial structure~\cite{AGeneralizedGaussianCoherentScattererModelforCorrelatedSARTexture,numbisi2018multi}.
 In this work, we focus on the second.
 
-In the existing literature, feature extraction followed by classification have often been applied, becoming the two significant steps that formed the basis for the analysis of satellite images~\cite{feng2014amplitude}.
-Different measures of texture proved to be essential for satellite images to derive the spatial contour of the surface, the arrangement and other varieties of soil properties.
+%Surface classification and land use are some of the most valuable applications of SAR images.
+%
+%, and the development of efficient strategies to cope with this problem is an ongoing research topic~\cite{Pottier2004Unsupervised}, for which supervised and unsupervised classification algorithms have been proposed~\cite{han2020unsupervised,huang2020classification,xie2020polsar}.
+%Such methods can be divided into two categories: methods based on SAR image statistical information, and methods based on textural information~\cite{guan2019covariance}.
+%%
+%Extraction and analysis of characteristics are crucial steps in the classification of regions, along with additional information and previous knowledge about the scene, the sensor, and the acquisition conditions.
+%The study of SAR textures reveals useful information about the target under analysis, being extremely important to characterize it quantitatively.
+
+%The tonal values in a synthetic aperture radar (SAR) image represent point measurements of the backscatter coefficient, and are related to the radar wavelength and to the interaction with the elements in the scene.
+%Through textural information, we acquire data from the spatial distribution of gray levels of the image and statistics about it~\cite{AGeneralizedGaussianCoherentScattererModelforCorrelatedSARTexture}.
+
+%The study of textures in remote sensing presents peculiarities concerning the analysis of isolated patterns since the texture represents only part of the scene under investigation, and it is necessary to consider micro and macro-textural structures of the image during the characterization.
+%However, texture analysis in SAR images provides essential information in addition to image gray levels or backscatter values and demonstrates improvements in accuracy in surface characterization due to the structural properties of different regions.
+% 
+
+
+
+%Feature extraction followed by classification have often been applied, becoming the two significant steps that formed the basis for the analysis of satellite images~\cite{feng2014amplitude}.
+%Different measures of texture proved to be essential for satellite images to derive the spatial contour of the surface, the arrangement and other varieties of soil properties.
 
 The most widely used approach to obtain textural features from SAR imagery is through co-occurrence matrices and Haralick's descriptors~\cite{yu2019detection}.
-Radford et al.~\cite{radford2018geological} used textural information derived from gray-level co-occurrence matrices, along with Random Forests, for geological mapping of remote and inaccessible localities; the authors obtained an accuracy of $\approx\SI{90}{\percent}$, even when using limited training data ($\approx\SI{0.15}{\percent}$ of the total data). 
+Radford et al.~\cite{radford2018geological} used textural information derived from gray-level co-occurrence matrices, along with Random Forests, for geological mapping of remote and inaccessible localities; the authors obtained a classification accuracy of $\approx\SI{90}{\percent}$, even when using limited training data ($\approx\SI{0.15}{\percent}$ of the total data). 
 %
 Hagensieker and Waske~\cite{hagensieker2018evaluation} evaluated the synergistic contribution of multi-temporal L-, C-, and X-band data to tropical land cover mapping, comparing classification outcomes of ALOS-2~\cite{kankaku2013alos}, RADARSAT-2~\cite{morena2004introduction}, and TerraSAR-X~\cite{breit2009terrasar} 
 datasets for a study site in the Brazilian Amazon using a wrapper approach. 
@@ -148,7 +170,7 @@ Other approaches include the Fourier power  spectrum~\cite{Florindo2012Fractal},
 In our approach, we opt to analyze the 1-D signals resulting from the linearization of the image samples, using non-parametric time series analysis techniques.
 With this approach, we reduce the dimensionality of the data and map the spatial dependence of the pixels onto the temporal correlation of a time series.
 Next, we extract a probability distribution from the ordinal patterns of a new transition graph, herein proposed, which can discriminate different levels of amplitude, and we use well-known features borrowed from the Information Theory field to classify texture patches.
-	
+
 The main contribution of this work is the proposal of a new set of features for characterization and classification of SAR textures, based on a modification of the current ordinal patterns transition graph, incorporating relevant time-series information.
 Our proposal, hereinafter referred to as Weighted Amplitude Transition Graph (WATG), incorporates the absolute difference between the observations, weighting them in the calculation of the final value of their probabilities.
 Experiments performed on SAR image textures indicate that this approach preserves essential information about the dynamics of the system, presenting excellent results in the classification of regions, where it has reached satisfactory levels of separability.
