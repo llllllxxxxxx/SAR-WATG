@@ -4,26 +4,24 @@
 # Generate Plot of SAR data as one-dimensional data
 #
 # Author: Eduarda Chagas
-# Date : Oct 2019
-# Contact: eduarda-chagas@ufmg.br
+# Date : Apr 2020
+# Contact: eduarda.chagas@dcc.ufmg.br
 ####################################################################################
+#setwd("/home/eduarda/Desktop/Research/Repositories/PolSARfromITQualitative/Code")
 
-if(!require(devtools)) install.packages("devtools")
-if(!require(ggplot2)) install.packages("ggplot2")
 if(!require(ggpubr)) install.packages("ggpubr")
 if(!require(raster)) install.packages("raster")
+if(!require(ggplot2)) install.packages("ggplot2")
+if(!require(devtools)) install.packages("devtools")
 if(!require(ggthemes)) install.packages("ggthemes")
-setwd("/home/eduarda/Desktop/Research/Repositories/PolSARfromITQualitative/Code")
 
-ns.guatemala = 8
-dimen.guatemala = matrix(nrow = ns.guatemala, ncol = 4)
-ns.canaveral = 10
-dimen.canaveral = matrix(nrow = ns.canaveral, ncol = 4)
+
 ns.munich = 4
+ns.guatemala = 4
+ns.canaveral = 8
 dimen.munich = matrix(nrow = ns.munich, ncol = 4)
-
-#The SAR data is available on https://drive.google.com/file/d/1jtbOcYwQfysfcUp4UhoA7lSl4_tPIqfa/view?usp=sharing and
-# correspond to HHHH band of an image taken from the Cape Canaveral (acquired Sep 22, 2016)
+dimen.guatemala = matrix(nrow = ns.guatemala, ncol = 4)
+dimen.canaveral = matrix(nrow = ns.canaveral, ncol = 4)
 
 #Ocean regions in Cape Canaveral
 #{Behavior 1}
@@ -37,13 +35,6 @@ dimen.canaveral[6,] = c(400, 128, 100, 128)
 dimen.canaveral[7,] = c(700, 128, 100, 128)
 dimen.canaveral[8,] = c(1100, 128, 100, 128)
 
-
-dimen.canaveral[9,] = c(750, 128, 1700, 128)
-dimen.canaveral[10,] = c(550, 128, 1850, 128)
-
-#The SAR data is available on https://drive.google.com/file/d/1pO6p_UI9Cgdci9y6jVynAv8SrrAvv7K8/view?usp=sharing and
-# correspond to HHHH band of an image taken from the Munich, Germany (acquired Jun 5, 2015) 
-
 #Urban regions in Munich
 dimen.munich[1,] = c(3000, 128, 400, 128)
 dimen.munich[2,] = c(3000, 128, 600, 128)
@@ -55,17 +46,6 @@ dimen.guatemala[1,] = c(5600, 128, 2700, 128) #region 1
 dimen.guatemala[2,] = c(5200, 128, 2800, 128) #region 2
 dimen.guatemala[3,] = c(4100, 128, 2930, 128) #region 3
 dimen.guatemala[4,] = c(1075, 128, 1930, 128) #region 4
-
-#Crop regions in Guatemala
-dimen.guatemala[5,] = c(400, 128, 1500, 128) #region 5
-
-#Ground regions in Guatemala
-#---------------------------------------------------
-#Possibilly you will have problems with this regions
-#It isn't uniform
-dimen.guatemala[6,] = c(250, 128, 1100, 128) #region 6
-dimen.guatemala[7,] = c(250, 128, 1850, 128) #region 7
-dimen.guatemala[8,] = c(1675, 128, 1930, 128) #region 8
 
 SAR.timeSeries <- function(analysis, image.region, j){
   if(image.region == 1){
@@ -87,44 +67,56 @@ SAR.timeSeries <- function(analysis, image.region, j){
     hilbertcurve = unlist(read.table("../Data/Hilbert/HilbertCurves128.txt")) + 1
     time.series = img[hilbertcurve]
   }
-  
   return(time.series)
 }
 
-j = 1
-analysis = 3
 n = 3
 tal = 1
+analysis = 3
 
 #################################################################################################################
 
-Guatemala.signal = SAR.timeSeries(analysis, 1, j)
+Guatemala.signal = SAR.timeSeries(analysis, 1, j = 1)
 Guatemala.signal = (Guatemala.signal - min(Guatemala.signal))/(max(Guatemala.signal)- min(Guatemala.signal))
 
-watg.guatemala = weight.transition.graph(Guatemala.signal, n, tal)
-round(watg.guatemala, digits = 3)
+#watg.guatemala = weight.transition.graph(Guatemala.signal, n, tal)
+#round(watg.guatemala, digits = 3)
 
-tg.guatemala = transition.graphs(Guatemala.signal, n, tal)
-round(tg.guatemala, digits = 3)
+#tg.guatemala = transition.graphs(Guatemala.signal, n, tal)
+#round(tg.guatemala, digits = 3)
 
-guatemala = qplot(x = c(1:length(Guatemala.signal)), y = Guatemala.signal, geom = "line", main = "Guatemala", xlab = "Observation", ylab = "Serie") +
-  theme_few(base_size = 18, base_family = "serif")  + theme(plot.title = element_text(hjust=0.5)) + 
+guatemala = qplot(x = c(1:length(Guatemala.signal)), y = Guatemala.signal, geom = "line", main = "Guatemala Forest", xlab = "Observation", ylab = "Serie") +
+  theme_few(base_size = 10, base_family = "serif")  + theme(plot.title = element_text(hjust=0.5)) + 
   scale_colour_few("Dark")
 
 #################################################################################################################
 
-Canaveral.signal = SAR.timeSeries(analysis = 3, image.region = 2, j = 1)
+Canaveral.signal.1 = SAR.timeSeries(analysis = 3, image.region = 2, j = 1)
+Canaveral.signal.1 = (Canaveral.signal.1 - min(Canaveral.signal.1))/(max(Canaveral.signal.1)- min(Canaveral.signal.1))
+
+#watg.cape = weight.transition.graph(Canaveral.signal, n, tal)
+#round(watg.cape, digits = 3)
+
+#tg.cape = transition.graphs(Canaveral.signal, n, tal)
+#round(tg.cape, digits = 3)
+
+canaveral.1 = qplot(x = c(1:length(Canaveral.signal.1)), y = Canaveral.signal.1, geom = "line", main = "Canaveral Ocean - Contrast type 1", xlab = "Observation", ylab = "Serie") +
+  theme_few(base_size = 10, base_family = "serif")  + theme(plot.title = element_text(hjust=0.5)) + 
+  scale_colour_few("Dark")
+
+#################################################################################################################
+
+Canaveral.signal = SAR.timeSeries(analysis = 3, image.region = 2, j = 7)
 Canaveral.signal = (Canaveral.signal - min(Canaveral.signal))/(max(Canaveral.signal)- min(Canaveral.signal))
 
-watg.cape = weight.transition.graph(Canaveral.signal, n, tal)
-round(watg.cape, digits = 3)
+#watg.cape = weight.transition.graph(Canaveral.signal, n, tal)
+#round(watg.cape, digits = 3)
 
-tg.cape = transition.graphs(Canaveral.signal, n, tal)
-round(tg.cape, digits = 3)
+#tg.cape = transition.graphs(Canaveral.signal, n, tal)
+#round(tg.cape, digits = 3)
 
-
-canaveral = qplot(x = c(1:length(Canaveral.signal)), y = Canaveral.signal, geom = "line", main = "Cape Canaveral", xlab = "Observation", ylab = "Serie") +
-  theme_few(base_size = 18, base_family = "serif")  + theme(plot.title = element_text(hjust=0.5)) + 
+canaveral.2 = qplot(x = c(1:length(Canaveral.signal)), y = Canaveral.signal, geom = "line", main = "Canaveral Ocean - Contrast type 2", xlab = "Observation", ylab = "Serie") +
+  theme_few(base_size = 10, base_family = "serif")  + theme(plot.title = element_text(hjust=0.5)) + 
   scale_colour_few("Dark")
 
 #################################################################################################################
@@ -132,19 +124,19 @@ canaveral = qplot(x = c(1:length(Canaveral.signal)), y = Canaveral.signal, geom 
 Munich.signal = SAR.timeSeries(analysis = 3, image.region = 3, j = 1)
 Munich.signal = (Munich.signal - min(Munich.signal))/(max(Munich.signal)- min(Munich.signal))
 
-watg.munich = weight.transition.graph(Munich.signal, n, tal)
-round(watg.munich, digits = 3)
+#watg.munich = weight.transition.graph(Munich.signal, n, tal)
+#round(watg.munich, digits = 3)
 
-tg.munich = transition.graphs(Munich.signal, n, tal)
-round(tg.munich, digits = 3)
+#tg.munich = transition.graphs(Munich.signal, n, tal)
+#round(tg.munich, digits = 3)
 
-munich = qplot(x = c(1:length(Munich.signal)), y = Munich.signal, geom = "line", main = "Munich", xlab = "Observation", ylab = "Serie") +
-  theme_few(base_size = 18, base_family = "serif")  + theme(plot.title = element_text(hjust=0.5)) + 
+munich = qplot(x = c(1:length(Munich.signal)), y = Munich.signal, geom = "line", main = "Munich Urban Area", xlab = "Observation", ylab = "Serie") +
+  theme_few(base_size = 10, base_family = "serif")  + theme(plot.title = element_text(hjust=0.5)) + 
   scale_colour_few("Dark")
 
 #################################################################################################################
 
-#ggarrange(guatemala, canaveral, munich + rremove("x.text"), ncol = 3, nrow = 1)
+ggarrange(guatemala, canaveral.1, canaveral.2, munich + rremove("x.text"), ncol = 4, nrow = 1)
 
 ########################################### Plot Weigthed Graphs ################################################
 

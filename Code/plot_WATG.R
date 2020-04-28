@@ -39,7 +39,7 @@ HC.Plane.zoom <- function(dimension, color.signal, shape.signal, signal.values, 
   signal.values = data.frame("H" = signal.values[,1], "C" = signal.values[,2], "Color" = Color, "Shape" = Shape, "Regions" = Regions)
   p = cotas(dimension)
   p = p + 
-    geom_point(aes(x = H, y = C, color = Regions), signal.values, shape = Shape, size = 2) +
+    geom_point(aes(x = H, y = C, color = Regions), alpha = I(0.25), signal.values, shape = Shape, size = 2) +
     xlim(limits=c(XMIN, XMAX)) + ylim(limits=c(YMIN, YMAX)) + 
     theme_few(base_size = 18, base_family = "serif") + 
     xlab(expression(italic(H))) + ylab(expression(italic(C))) +
@@ -195,5 +195,5 @@ plot.d3t1 <- function(){
   
 }
 
-#plot.transition.graph.analysis()
-plot.d3t1()
+plot.transition.graph.analysis()
+#plot.d3t1()
