@@ -15,37 +15,10 @@ if(!require(gtools)) install.packages("gtools")
 if(!require(ggplot2)) install.packages("ggplot2")
 if(!require(ggthemes)) install.packages("ggthemes")
 if(!require(ggpubr)) install.packages("ggpubr")
+if(!require(extrafont)) install.packages("extrafont")
 source("theory_information.R")
 
 ###################################### Function of Plot ################################################
-
-HC.Plane.zoom <- function(dimension, color.signal, shape.signal, signal.values){
-  
-  shape.select <- c(17,18,19,8)
-  XMIN = min(signal.values[,1]) + 0.00005
-  XMAX = min(max(signal.values[,1]) + 0.0005, 1)
-  YMIN = max(0,min(signal.values[,2]) - 0.0005)
-  YMAX = max(signal.values[,2]) + 0.0005
-  
-  # Paleta montada a partir de https://coolors.co/
-  rainbow.colors = palette(c("#3F84E5",
-                             "#B20D30", 
-                             "#3F784C",
-                             "#EFCD4A"))
-  
-  Color = rainbow.colors[color.signal]
-  Shape = shape.select[shape.signal]
-  Regions =  c("Forest", "Ocean", "", "Urban")[color.signal]
-  signal.values = data.frame("H" = signal.values[,1], "C" = signal.values[,2], "Color" = Color, "Shape" = Shape, "Regions" = Regions)
-  p = cotas(dimension)
-  p = p + 
-    geom_point(aes(x = H, y = C, color = Regions), signal.values, shape = Shape, size = 2) +
-    xlim(limits=c(XMIN, XMAX)) + ylim(limits=c(YMIN, YMAX)) + 
-    theme_few(base_size = 18, base_family = "serif") + 
-    xlab(expression(italic(H))) + ylab(expression(italic(C))) +
-    scale_colour_few("Dark")
-  return(p)
-}
 
 HC.Plane.no.cota <- function(dimension, color.signal, shape.signal, signal.values){
   
@@ -85,7 +58,7 @@ plot.BP.analysis <- function(){
     tal = 1 #Delay parameter
     plots = array(list(), 20)
     hilbertcurve = unlist(read.table("../Data/Hilbert/HilbertCurves128.txt")) + 1
-    types = c(rep(1,40), rep(2,40), rep(3,40), rep(4, 40))
+    types = c(rep(1,40), rep(2,80), rep(4, 40))
     regions = c(rep(1,40), rep(2,80), rep(4, 40))
     n.total = 160
     
@@ -95,12 +68,38 @@ plot.BP.analysis <- function(){
     Entropy.Complexity[,1] = Entropy.Complexity.csv[, 1]
     Entropy.Complexity[,2] = Entropy.Complexity.csv[, 2]
     
-    png("BPHC.png", width = 650, height = 450)
-    
-    plots = HC.Plane.no.cota(n, regions, types, Entropy.Complexity) + ggtitle(expression(italic("Bandt-Pompe")))
-    
-    print(plots)
-    dev.off()
+    plot.BP = HC.Plane.no.cota(n, regions, types, Entropy.Complexity) + ggtitle(expression(italic("Bandt-Pompe"))) +
+      labs(x="", y="")
+    return(plot.BP)
 }
 
-plot.BP.analysis()
+pdf("BP.pdf", width = 10, height = 8) 
+plot.BP = plot.BP.analysis()
+dev.off() 
+
+pdf("HCAnalysis.pdf", width = 18, height = 5) 
+ggarrange(plot.BP, plot.TG, plot.WATG + rremove("x.text"),
+          ncol = 3, nrow = 1, common.legend = TRUE, legend = "right") + 
+  ggtitle(expression(italic("HC Plane"))) +
+  xlab(expression(italic("H"))) + ylab(expression(italic("C"))) + labs(colour=expression(italic(Regions))) +
+  theme_igray() + theme(text = element_text(size = 18, family="Times", face="italic"), plot.title = element_text(hjust = 0.5)) + 
+  guides(colour = guide_legend(override.aes = list(size = 3)))
+dev.off() 
+
+pdf("HCAnalysis1.pdf", width = 24, height = 5) 
+ggarrange(plot.BP, plot.WPE, plot.TG, plot.WATG + rremove("x.text"),
+          ncol = 4, nrow = 1, common.legend = TRUE, legend = "right") + 
+          ggtitle(expression(italic("HC Plane"))) +
+          xlab(expression(italic("H"))) + ylab(expression(italic("C"))) + labs(colour=expression(italic(Regions))) +
+          theme_igray() + theme(text = element_text(size = 18, family="Times", face="italic"), plot.title = element_text(hjust = 0.5)) + 
+          guides(colour = guide_legend(override.aes = list(size = 3)))
+dev.off() 
+
+pdf("HCAnalysis2.pdf", width = 24, height = 10) 
+ggarrange(plot.BP, plot.WPE, plot.TG, plot.WATG,
+          plot.FGPE.A1, plot.FGPE.A05, plot.AAPE.A1, plot.AAPE.A05,
+          ncol = 4, nrow = 2, common.legend = TRUE, legend = "right") +
+          ggtitle(expression(italic("HC Plane"))) +
+          xlab(expression(italic("H"))) + ylab(expression(italic("C"))) + labs(colour=expression(italic(Regions))) +
+          theme_igray() + theme(text = element_text(size = 18, family="Times", face="italic"), plot.title = element_text(hjust = 0.5))
+dev.off() 

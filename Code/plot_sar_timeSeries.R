@@ -136,7 +136,9 @@ munich = qplot(x = c(1:length(Munich.signal)), y = Munich.signal, geom = "line",
 
 #################################################################################################################
 
+pdf("SAR_TS.pdf", width = 12, height = 3) 
 ggarrange(guatemala, canaveral.1, canaveral.2, munich + rremove("x.text"), ncol = 4, nrow = 1)
+dev.off() 
 
 ########################################### Plot Weigthed Graphs ################################################
 

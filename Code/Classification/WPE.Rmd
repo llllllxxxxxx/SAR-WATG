@@ -1,7 +1,7 @@
 ---
-title: "Classification of Regions with Bandt-Pompe"
+title: "Classification of Regions with WPE"
 author: "Eduarda Chagas"
-date: "Mar 18, 2020"
+date: "May 2, 2020"
 output:
   pdf_document: default
   html_notebook: default
@@ -45,7 +45,7 @@ Entropy.Complexity = data.frame("Entropy" = numeric(n.total),
                                 "Region" = character(n.total), 
                                 stringsAsFactors=FALSE)
 
-Entropy.Complexity.csv = read.csv(file="../../Data/EntropyComplexityBPD3T1.csv", 
+Entropy.Complexity.csv = read.csv(file="../../Data/EntropyComplexityWPED3T1.csv", 
                                   header=TRUE, sep=",")
 Entropy.Complexity$Entropy = Entropy.Complexity.csv[,1]
 Entropy.Complexity$Complexity = Entropy.Complexity.csv[,2]
@@ -89,6 +89,40 @@ confusionMatrix(xtab)
 ```{r}
 knnFit
 ```
+
+```{r}
+cat("Accuracy: ", Accuracy(pred, y_validation), " Recall: ", Recall(pred, y_validation), " Precision: ", Precision(pred, y_validation), " F1-Score: ", F1_Score(pred, y_validation), "\n")
+```
+
+##SVM Classifier
+
+###Creating svm model using non-linear kernel
+```{r}
+svmFit <- train(Region ~., data = Entropy.Complexity, method = "svmRadial",
+                 trControl=ctrl,
+                 preProcess = c("center", "scale"),
+                 tuneLength = 20)
+pred = predict(svmFit, newdata = x_validation)
+
+xtab = table(pred, y_validation)
+confusionMatrix(xtab)
+```
+
+```{r}
+cat("Accuracy: ", Accuracy(pred, y_validation), " Recall: ", Recall(pred, y_validation), " Precision: ", Precision(pred, y_validation), " F1-Score: ", F1_Score(pred, y_validation), "\n")
+```
+
+##Random Forest Classifier
+
+###Creating Random Forest model and predicting
+```{r}
+rfFit <- train(Region~., data = Entropy.Complexity, method = "rf", 
+               trControl = ctrl, 
+               preProcess = c("center","scale"), 
+               tuneLength = 20)
+pred = predict(rfFit, newdata = x_validation)
+```
+
 
 ```{r}
 cat("Accuracy: ", Accuracy(pred, y_validation), " Recall: ", Recall(pred, y_validation), " Precision: ", Precision(pred, y_validation), " F1-Score: ", F1_Score(pred, y_validation), "\n")

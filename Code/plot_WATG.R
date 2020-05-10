@@ -24,8 +24,8 @@ HC.Plane.zoom <- function(dimension, color.signal, shape.signal, signal.values, 
   shape.select <- c(17,18,19,8)
   XMIN = min(signal.values[,1]) + 0.00005
   XMAX = min(max(signal.values[,1]) + 0.0005, 1)
-  YMIN = max(0,min(signal.values[,2]) - 0.05)
-  YMAX = max(signal.values[,2]) + 0.05
+  YMIN = max(0,min(signal.values[,2]) - 0.005)
+  YMAX = max(signal.values[,2]) + 0.005
   
   # Paleta montada a partir de https://coolors.co/
   rainbow.colors = palette(c("#3F84E5",
@@ -37,6 +37,7 @@ HC.Plane.zoom <- function(dimension, color.signal, shape.signal, signal.values, 
   Shape = shape.select[shape.signal]
   Regions =  c("Forest", "Ocean", "", "Urban")[color.signal]
   signal.values = data.frame("H" = signal.values[,1], "C" = signal.values[,2], "Color" = Color, "Shape" = Shape, "Regions" = Regions)
+  
   p = cotas(dimension)
   p = p + 
     geom_point(aes(x = H, y = C, color = Regions), alpha = I(0.25), signal.values, shape = Shape, size = 2) +
@@ -49,7 +50,7 @@ HC.Plane.zoom <- function(dimension, color.signal, shape.signal, signal.values, 
   if(horizontal == 1 )
     ylab = paste("D = ", d)
   if(vertical)
-    xlab = paste("t = ", t)
+    xlab = paste("tau = ", t)
   
   p = p + labs(x = xlab, y = ylab)
   return(p)
@@ -119,13 +120,13 @@ plot.transition.graph.analysis <- function(){
   n = c(3,4,5,6) #Dimension parameter
   tal = c(1,2,3,4,5) #Delay parameter
   plots = array(list(), 20)
-  hilbertcurve <- unlist(read.table("../Data/Hilbert/HilbertCurves128.txt")) + 1
-  types <- c(rep(1,40), rep(2,40), rep(3,40), rep(4, 40))
-  regions <- c(rep(1,40), rep(2,80), rep(4, 40))
+  hilbertcurve = unlist(read.table("../Data/Hilbert/HilbertCurves128.txt")) + 1
+  types = c(rep(1,40), rep(2,80), rep(4, 40))
+  regions = c(rep(1,40), rep(2,80), rep(4, 40))
   n.total = 160
   a = b = 0
   
-  Entropy.Complexity.csv <-read.csv(file="../Data/EntropyComplexityWATG.csv", header=TRUE, sep=",")
+  Entropy.Complexity.csv = read.csv(file="../Data/EntropyComplexityWATG.csv", header=TRUE, sep=",")
   
   for(i in 1:(length(n)*length(tal))){
     
@@ -155,9 +156,6 @@ plot.transition.graph.analysis <- function(){
     plots[[i]] = HC.Plane.zoom(factorial(n[a])^2, regions, types, Entropy.Complexity, horizontal, vertical, n[a], tal[b])
   }
   
-  png("transitionHC.png", width = 1500, height = 850)
-  
-  
   p = ggarrange(plots[[1]], plots[[2]], plots[[3]], plots[[4]], plots[[5]],
                 plots[[6]], plots[[7]], plots[[8]], plots[[9]], plots[[10]],
                 plots[[11]], plots[[12]], plots[[13]], plots[[14]], plots[[15]],
@@ -167,10 +165,7 @@ plot.transition.graph.analysis <- function(){
     xlab(expression(italic(H))) + ylab(expression(italic(C))) + labs(colour=expression(italic(Regions))) +
     theme_igray() + theme(text=element_text(size=14, family="Times New Roman"), axis.text.x=element_blank(), axis.text.y=element_blank(),plot.title = element_text(hjust=0.5)) + 
     guides(colour = guide_legend(override.aes = list(size=3)))
-  
-  print(p)
-  dev.off()
-  
+  return(p)
 }
 
 plot.d3t1 <- function(){
@@ -178,7 +173,7 @@ plot.d3t1 <- function(){
   n = 3 #Dimension parameter
   tal = 1 #Delay parameter
   hilbertcurve = unlist(read.table("../Data/Hilbert/HilbertCurves128.txt")) + 1
-  types = c(rep(1,40), rep(2,40), rep(3,40), rep(4, 40))
+  types = c(rep(1,40), rep(2,80), rep(4, 40))
   regions = c(rep(1,40), rep(2,80), rep(4, 40))
   n.total = 160
   
@@ -188,12 +183,17 @@ plot.d3t1 <- function(){
   Entropy.Complexity[,1] = Entropy.Complexity.csv[1:160, 1]
   Entropy.Complexity[,2] = Entropy.Complexity.csv[1:160, 2]
     
-  png("WATGHC.png", width = 650, height = 450)
-  plots = HC.Plane.no.cota(n, regions, types, Entropy.Complexity) + ggtitle(expression(italic("WATG")))
-  print(plots)
-  dev.off()
+  plot.WATG = HC.Plane.no.cota(n, regions, types, Entropy.Complexity) + ggtitle(expression(italic("WATG"))) +
+    labs(x="", y="")
+  return(plot.WATG)
   
 }
 
-plot.transition.graph.analysis()
-#plot.d3t1()
+#pdf("WATG.pdf", width = 10, height = 8) 
+#plot.WATG = plot.d3t1()
+#dev.off() 
+
+p = plot.transition.graph.analysis()
+pdf("transitionHC.pdf", width = 24, height = 15)
+p
+dev.off()
