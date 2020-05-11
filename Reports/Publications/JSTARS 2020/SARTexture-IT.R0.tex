@@ -622,17 +622,17 @@ We use the following eight methods:
 Gray-level co-occurrence matrices~\cite{kourgli2012texture}, 
 Gabor filters~\cite{weldon1996efficient},  
 Bandt-Pompe probability distribution~\cite{Bandt2002Permutation}, 
-Weighted- permutation entropy~\cite{Fadlallah2013Weightedpermutation},
+Weighted-permutation entropy~\cite{Fadlallah2013Weightedpermutation},
 Fine-grained permutation entropy~\cite{xiao2009fine}, 
 Amplitude-aware permutation entropy~\cite{azami2016amplitude} and 
 Ordinal patterns transition graphs~\cite{Borges2019Transition}.
-As applied in~\cite{guan2019covariance}, 
+
+As in~\cite{guan2019covariance}, 
 we computed four statistics from co-occurrence matrices: contrast, correlation, energy, and homogeneity.
 Likewise, we implemented the Gabor filters in five scales and eight orientations; using the Energy, we obtained an $80$-dimensional feature vector for each patch.
 %\todo[inline]{Referências para os métodos são super bem-vindas aqui}
 %%% ETCC Todos os métodos estão com referências para os seus respectivos trabalhos e adicionei o paper utilizado como referência na implementação do baseline proposto.
 Table~\ref{tab:result1} summarizes the number of features each method produces.
-
 
 We used the $k$-nearest neighbors algorithm for classification with Euclidean distance, selecting the value of $k$ with the automatic grid search method of the Caret R package~\cite{kuhn2008building}.
 In the following, we used $k = 20$.
@@ -650,16 +650,17 @@ We assess the effectiveness of each approach using the following metrics: recall
 		\toprule
 		Method      & \multirow{2}{*}{\# features}         &       & TPR   &       &       & PPV    &       & \multirow{2}{*}{OA}  & \multirow{2}{*}{F1-Score} \\ \cmidrule(lr){3-5} \cmidrule(lr){6-8}
 		&   & Urban & Forest & Ocean & Urban & Forest & Ocean & &  \\ \midrule
+		GLCM            & 4   & 1.000 & 0.833  & 1.000 & 1.000 & 1.000  & 0.923 & 0.666 & 0.800\\
+		Gabor           & 80  & 1.000 & 1.000  & 1.000 & 1.000 & 1.000  & 1.000 & 1.000 & 1.000\\ \cmidrule(rl){1-10}
 		Bandt-Pompe   & 2 & 0.833 &  0.666  & 0.833 & 1.000 & 0.571  & 0.833 & 0.792 &  0.615  \\ 
+		Transition Graph & 2  & 1.000 & 0.666  & 0.916 & 0.857 & 1.000  & 0.846 & 0.875 & 0.800 \\ \cmidrule(rl){1-10}
 		WPE   & 2 & 0.833 &  0.666  & 0.666 & 0.833 & 0.500  & 0.800 & 0.708 &  0.571  \\ 
 		FGPE ($\alpha$ = 1)  & 2 & 1.000 &  0.833  & 0.833 & 1.000 & 0.714  & 0.909 & 0.875 &  0.769  \\ 
 		FGPE ($\alpha$ = 0.5)   & 2 & 1.000 &  0.833  & 1.000 & 1.000 & 1.000  & 0.923 & 0.958 &  0.909  \\ 
 		AAPE (A = 1)   & 2 & 1.000 &  0.500  & 0.750  & 1.000 & 0.500  & 0.750  & 0.750 &  0.500  \\ 
-		AAPE (A = 0.5)   & 2 & 1.000 &  0.333  & 0.833 & 1.000 & 0.500  & 0.714 & 0.750 &  0.400  \\ 
-		Transition Graph & 2  & 1.000 & 0.666  & 0.916 & 0.857 & 1.000  & 0.846 & 0.875 & 0.800 \\
+		AAPE (A = 0.5)   & 2 & 1.000 &  0.333  & 0.833 & 1.000 & 0.500  & 0.714 & 0.750 &  0.400  \\ \cmidrule(rl){1-10}
 		WATG        & 2  & 1.000 & 1.000  & 1.000 & 1.000 & 1.000  & 1.000 & 1.000 & 1.000 \\ 
-		Gabor           & 80  & 1.000 & 1.000  & 1.000 & 1.000 & 1.000  & 1.000 & 1.000 & 1.000\\
-		GLCM            & 4   & 1.000 & 0.833  & 1.000 & 1.000 & 1.000  & 0.923 & 0.666 & 0.800\\
+
 		\bottomrule
 	\end{tabular}
 \end{table*}
