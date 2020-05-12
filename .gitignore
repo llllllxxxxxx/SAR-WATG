@@ -381,6 +381,6 @@ $RECYCLE.BIN/
 
 # End of https://www.gitignore.io/api/r,latex,linux,macos,windows
 
-/Reports/LAGIRS 2020/ISPRS.pdf
+/Reports/Publications/LAGIRS 2020/ISPRS.pdf
 /Reports/PGM/main.pdf
-/Reports/JSTARS 2020/SARTexture-IT.R0.pdf
+/Reports/Publications/JSTARS 2020/SARTexture-IT.R0.pdf
