@@ -860,7 +860,6 @@ plot.dimension.tau <- function(){
   tau = rep(c(1,2,3,4,5), 4)
   
   D = factor(D)
-  Tau = factor(tau)
   
   
   metrics.calculated.csv = read.csv("../Data/metricsCalculated.csv")
@@ -885,7 +884,11 @@ plot.dimension.tau <- function(){
                              "#69140E",
                              "#AD6634",
                              "#311B40"))
-    legend.names = rep(c("t = 1","t = 2", "t = 3", "t = 4", "t = 5"), 4)
+  legend.names = rep(c(bquote(tau == 1), 
+                       bquote(tau == 2), 
+                       bquote(tau == 3), 
+                       bquote(tau == 4), 
+                       bquote(tau == 5)),  4)
 
      pdf("ROC.pdf", width = 6, height = 4)
      ROC.curve =  ggplot(data = metrics.calculated.csv,
@@ -893,14 +896,14 @@ plot.dimension.tau <- function(){
                              group = D, shape = D, color = D)) + 
        #geom_text(aes(label = legend.names), size = 2.5, hjust=1, vjust=2.5) +
        #geom_label_repel(aes(label = legend.names, fill = D), color = 'white', size = 2.5) +
-       geom_label_repel(aes(label = legend.names), box.padding   = 0.35, point.padding = 0.5, segment.color = 'grey50', size = 2.5) +
+       geom_label_repel(aes(label = legend.names), box.padding   = 0.35, point.padding = 0.5, segment.color = 'grey50', size = 2.5, parse = TRUE) +
        theme_classic() + 
        geom_point(shape = point.shape, size = 4) + scale_color_manual(values = rainbow_colors) +
        ylab("True Positive Rate") +
        xlab("False Positive Rate") +
-       ggtitle("ROC Curve") +
+       #ggtitle("ROC Curve") +
        scale_shape_identity() +
-       theme_few(base_size = 14, base_family = "serif")  +
+       theme_few(base_size = 12, base_family = "serif")  +
        theme(plot.title = element_text(hjust=0.5))
      print(ROC.curve)
      dev.off()

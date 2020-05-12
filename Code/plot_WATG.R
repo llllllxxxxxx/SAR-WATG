@@ -49,10 +49,11 @@ HC.Plane.zoom <- function(dimension, color.signal, shape.signal, signal.values, 
   xlab = ylab = ""
   if(horizontal == 1 )
     ylab = paste("D = ", d)
-  if(vertical)
-    xlab = paste("tau = ", t)
+  if(vertical){
+    xlab = bquote(tau==.(t))
+  }
   
-  p = p + labs(x = xlab, y = ylab)
+  p = p + labs(x = xlab, y = ylab, parse = TRUE)
   return(p)
 }
 
@@ -148,7 +149,7 @@ plot.transition.graph.analysis <- function(){
     b = b + 1
     
     cat("- Plane: ", i, "de 20 ", "\n")
-    Entropy.Complexity <- matrix(nrow = n.total, ncol = 2)
+    Entropy.Complexity = matrix(nrow = n.total, ncol = 2)
     
     Entropy.Complexity[,1] = Entropy.Complexity.csv[((n.total*(i-1))+1):(n.total*i), 1]
     Entropy.Complexity[,2] = Entropy.Complexity.csv[((n.total*(i-1))+1):(n.total*i), 2]
@@ -194,6 +195,6 @@ plot.d3t1 <- function(){
 #dev.off() 
 
 p = plot.transition.graph.analysis()
-pdf("transitionHC.pdf", width = 24, height = 15)
+pdf("WATGHC.pdf", width = 24, height = 15)
 p
 dev.off()
