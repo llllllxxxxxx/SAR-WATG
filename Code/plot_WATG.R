@@ -42,8 +42,6 @@ HC.Plane.zoom <- function(dimension, color.signal, shape.signal, signal.values, 
   p = p + 
     geom_point(aes(x = H, y = C, color = Regions), alpha = I(0.25), signal.values, shape = Shape, size = 2) +
     xlim(limits=c(XMIN, XMAX)) + ylim(limits=c(YMIN, YMAX)) + 
-    theme_few(base_size = 18, base_family = "serif") + 
-    xlab(expression(italic(H))) + ylab(expression(italic(C))) +
     scale_colour_few("Dark")
   
   xlab = ylab = ""
@@ -60,10 +58,10 @@ HC.Plane.zoom <- function(dimension, color.signal, shape.signal, signal.values, 
 HC.Plane.no.cota <- function(dimension, color.signal, shape.signal, signal.values){
   
   shape.select = c(17,18,19,8)
-  XMIN = min(signal.values[,1]) + 0.00005
+  XMIN = min(signal.values[,1]) + 0.0005
   XMAX = min(max(signal.values[,1]) + 0.0005, 1)
-  YMIN = max(0,min(signal.values[,2]) - 0.05)
-  YMAX = max(signal.values[,2]) + 0.05
+  YMIN = max(0,min(signal.values[,2]) - 0.008)
+  YMAX = max(signal.values[,2]) + 0.008
   
   # Paleta montada a partir de https://coolors.co/
   rainbow.colors = palette(c("#3F84E5",
@@ -76,7 +74,10 @@ HC.Plane.no.cota <- function(dimension, color.signal, shape.signal, signal.value
   Regions =  c("Forest", "Ocean", "", "Urban")[color.signal]
   signal.values = data.frame("H" = signal.values[,1], "C" = signal.values[,2], "Color" = Color, "Shape" = Shape, "Regions" = Regions)
   
-  p = ggplot(signal.values, aes(H, C, color = Regions, shape = Shape)) + geom_point(size = 2) +
+  p = cotas(factorial(dimension)^2)
+  p = p + 
+    geom_point(data = signal.values, aes(x = H, y = C, color = Regions, shape = Shape), size = 2) +
+    labs(x = TeX("\\textit{H}"), y = TeX("\\textit{C}"))  +
     scale_shape_identity() +
     xlim(limits=c(XMIN, XMAX)) + ylim(limits=c(YMIN, YMAX)) + 
     theme_few(base_size = 18, base_family = "serif")  + 
@@ -105,7 +106,7 @@ HC.Plane.cota <- function(dimension, color.signal, shape.signal, signal.values){
   Texture = color.signal
   Regions =  c("Forest", "Ocean", "", "Urban")[color.signal]
   signal.values <- data.frame("H" = signal.values[,1], "C" = signal.values[,2], "Color" = Color, "Shape" = Shape, "Regions" = Regions)
-  p = cotas(dimension)
+  p = cotas(factorial(dimension)^2)
   p = p + 
     geom_point(aes(H, C, color = Regions, shape = Shape), size = 3) +
     labs(x="", y="") + xlim(limits=c(XMIN, XMAX)) + ylim(limits=c(YMIN, YMAX)) + 
@@ -162,9 +163,10 @@ plot.transition.graph.analysis <- function(){
                 plots[[11]], plots[[12]], plots[[13]], plots[[14]], plots[[15]],
                 plots[[16]], plots[[17]], plots[[18]], plots[[19]], plots[[20]],
                 ncol=5, nrow=4, common.legend = TRUE, legend = "right") + 
-    ggtitle(expression(italic("WATG"))) +
-    xlab(expression(italic(H))) + ylab(expression(italic(C))) + labs(colour=expression(italic(Regions))) +
-    theme_igray() + theme(text=element_text(size=14, family="Times New Roman"), axis.text.x=element_blank(), axis.text.y=element_blank(),plot.title = element_text(hjust=0.5)) + 
+    ggtitle(TeX("\\textit{H} $ \\times $ \\textit{C Plane}")) +
+    xlab(expression(italic(H))) + ylab(expression(italic(C))) + 
+    labs(colour=expression(italic(Regions))) +
+    theme_igray() + theme(text=element_text(size=14, family="Times"), axis.text.x=element_blank(), axis.text.y=element_blank(),plot.title = element_text(hjust=0.5)) + 
     guides(colour = guide_legend(override.aes = list(size=3)))
   return(p)
 }
@@ -184,8 +186,7 @@ plot.d3t1 <- function(){
   Entropy.Complexity[,1] = Entropy.Complexity.csv[1:160, 1]
   Entropy.Complexity[,2] = Entropy.Complexity.csv[1:160, 2]
     
-  plot.WATG = HC.Plane.no.cota(n, regions, types, Entropy.Complexity) + ggtitle(expression(italic("WATG"))) +
-    labs(x="", y="")
+  plot.WATG = HC.Plane.no.cota(n, regions, types, Entropy.Complexity) + ggtitle(expression(italic("WATG"))) 
   return(plot.WATG)
   
 }
