@@ -1,39 +1,34 @@
-# Characterization of SAR Images with Weighted Amplitude Transition Graphs
+# Analysis and Classification of SAR Textures using Information Theory
 
-#### Eduarda C. Chagas, Alejandro C. Frery, Heitor S. Ramos and Osvaldo A. Rosso 
+#### [Eduarda C. Chagas](mailto:eduarda.chagas@dcc.ufmg.br), [Alejandro C. Frery](mailto:acfrery@laccan.ufal.br), [Heitor S. Ramos](mailto:ramosh@dcc.ufmg.br), and [Osvaldo A. Rosso](mailto:oarosso@gmail.com)
 
 </br>
 
 
-### This repository contains all the data and code used to develop our research in the related paper submitted to LAGIRS 2020. 
+### This repository contains all the data and code used to develop our research in the related paper submitted to J-STARS. 
 
 ---
 
 #### Abstract
 
-We propose a new technique for SAR image texture characterization based on ordinal pattern transition graphs.
-	The proposal consists in
-	(i) transforming a 2-D patch of data into a time series using a Hilbert Space Filling Curve,
-	(ii) building an Ordinal Pattern Transition Graph with weighted edges;
-	(iii) obtaining a probability distribution function from this graph;
-	(iv) computing the Entropy and Statistical Complexity of this distribution.
-	The weight of the edges is related to the absolute difference of observations.
-	This modification takes into account the scattering properties of the target, and leads to a good characterization of several types of textures.
-	Experiments with data from Munich urban areas, Guatemala forest regions, and Cape Canaveral ocean samples demonstrate the effectiveness of our technique, which achieves satisfactory levels of separability.
+We propose a new technique texture analysis and classification based on the Bandt-Pompe symbolization, and we apply it to SAR data. It consists of (i) linearize a 2-D patch of the image using the Hilbert-Peano curve, (ii) build an Ordinal Pattern Transition Graph that considers the data amplitude encoded into the weight of the edges; (iii) obtain a probability distribution function derived from this graph; (iv) compute Information Theory descriptors (Permutation Entropy and Statistical Complexity) from this distribution, and use them as features to feed a classifier. The ordinal pattern graph we propose considers that the weight of the edges is related to the absolute difference of observations, which encodes the information about the data amplitude. This modification takes into account the scattering properties of the target and leads to the characterization of several types of textures. Experiments with data from Munich urban areas, Guatemala forest regions, and Cape Canaveral ocean samples show the effectiveness of our technique, which achieves satisfactory levels of separability. The two descriptors chosen in this work are easy and quick to calculate and are used as input for a k-nearest neighbor classifier. Experiments show that this technique presents results similar to state-of-the-art techniques that employ a much larger number of features and, consequently, require a higher computational cost.
 
 #### Methodology
 
 Our procedure consists of the following steps:
 
-	1. Transforming a 2-D patch of data into a time series using a Hilbert Space Filling Curve;
-	
-	2. Building an Ordinal Pattern Transition Graph with weighted edges;
-	
-	3. Obtaining a probability distribution function from this graph;
-	
-	4. Computing the Entropy and Statistical Complexity of this distribution.
+	1. extract the HHHH backscatter magnitudes of quad-polarimetric L-band SAR image, obtaining the image texture;
 
-![Methodology used in the characterization of SAR image textures](https://github.com/EduardaChagas/SAR-WATG/blob/master/Figures/WATG.png)
+	2. linearizing a 2-D patch of data using the Hilbert-Peano curve;
+
+	3. employing the Bandt-Pompe symbolization to generate the set of ordinal patterns for each data sequence;
+
+	4. building the Ordinal Pattern Transition Graph with weighted edges to obtain a probability distribution function derived from this graph;
+
+	5. computing the Entropy and Statistical Complexity of this distribution and, finally, classify regions.
+	
+<img src="https://github.com/EduardaChagas/SAR-WATG/blob/master/Figures/AnalysisSARTextures.png" />
+
 
 #### Datasets
 
@@ -47,7 +42,11 @@ For this analysis, three SAR images with different regions were used, available 
 
 The images used in this experiment are results from the HHHH SAR band and each sample is represented by a 128 × 128 subimage.
 
-A total of 160 samples were considered during the investigation, 40 samples from each category of regions: Guatemalan forest regions; oceanic regions of Cape Canaveral with behavior 1; Cape Canaveral Behavioral Ocean Regions 2 and Urban City of Munich.
+We manually selected 160 samples to compose the dataset used in the experiments. It is organized as follows:
+
+- 40 samples from Guatemalan forest regions;
+- 80 samples from the oceanic regions of Cape Canaveral, divided into two types with different contrast; and
+- 40 samples of urban regions of the city of Munich.
 
 #### The repository is organized as follows:
 - `/Code` - the scripts used to develop our research; 
@@ -98,6 +97,14 @@ statcomp       0.0.1.1000
 ```
 
 This experiment is very computationally expensive and takes time to run, as we evaluate 160 samples of SAR images. 
+
+### Files
+
+[Submitted file](<./Reports/Publications/JSTARS 2020/SARTexture-IT.R0.pdf>)
+
+[References](<./Reports/Publications/JSTARS 2020/ReferencesR0.html>)
+
+---
 
 Finally, if you have any questions or you want to report anaything, feel free to reach me at: eduarda.chagas@dcc.ufmg.br. 
 
