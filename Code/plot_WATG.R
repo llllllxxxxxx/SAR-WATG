@@ -15,6 +15,7 @@ if(!require(gtools)) install.packages("gtools")
 if(!require(ggplot2)) install.packages("ggplot2")
 if(!require(ggthemes)) install.packages("ggthemes")
 if(!require(ggpubr)) install.packages("ggpubr")
+if(!require(latex2exp)) install.packages("latex2exp")
 source("theory_information.R")
 
 ###################################### Function of Plot ################################################
@@ -196,6 +197,6 @@ plot.d3t1 <- function(){
 #dev.off() 
 
 p = plot.transition.graph.analysis()
-pdf("WATGHC.pdf", width = 24, height = 15)
+#pdf("WATGHC.pdf", width = 24, height = 15)
 p
-dev.off()
+#dev.off()
