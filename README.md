@@ -100,17 +100,10 @@ raster         2.9.5
 
 - [Submitted file](<https://github.com/EduardaChagas/SAR-WATG/blob/master/Publications/JSTARS%202020/SARTexture-IT.R0.pdf>)
 
-- [References](<./Reports/Publications/JSTARS 2020/ReferencesR0.html>)
+- [References](<https://github.com/EduardaChagas/SAR-WATG/blob/master/Publications/JSTARS%202020/ReferencesR0.html>)
 
 ---
 
-### Files
-
-[Submitted file](<./Reports/Publications/JSTARS 2020/SARTexture-IT.R0.pdf>)
-
-[References](<./Reports/Publications/JSTARS 2020/ReferencesR0.html>)
-
----
 
 Finally, if you have any questions or you want to report anaything, feel free to reach me at: eduarda.chagas@dcc.ufmg.br. 
 
