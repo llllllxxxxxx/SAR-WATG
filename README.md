@@ -26,7 +26,7 @@ Our procedure consists of the following steps:
 
 	5. computing the Entropy and Statistical Complexity of this distribution and, finally, classify regions.
 	
-<img src="https://github.com/EduardaChagas/SAR-WATG/blob/master/Figures/AnalysisSARTextures.png" />
+<img src="/Figures/AnalysisSARTextures.png" />
 
 
 #### Datasets
