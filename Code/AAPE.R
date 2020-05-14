@@ -12,10 +12,6 @@
 
 setwd("/home/eduarda/Desktop/Research/Repositories/PolSARfromITQualitative/Code")
 if(!require(gtools)) install.packages("gtools")
-if(!require(ggplot2)) install.packages("ggplot2")
-if(!require(ggthemes)) install.packages("ggthemes")
-if(!require(igraph)) install.packages("igraph")
-if(!require(ggpubr)) install.packages("ggpubr")
 if(!require(raster)) install.packages("raster")
 source("theory_information.R")
 

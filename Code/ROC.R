@@ -1,8 +1,9 @@
 # Load some packages:
-if(!require(caret)) install.packages("caret")
-if(!require(MLmetrics)) install.packages("MLmetrics")
 if(!require(ggplot2)) install.packages("ggplot2")
 if(!require(ggthemes)) install.packages("ggthemes")
+if(!require(caret)) install.packages("caret")
+if(!require(EnvStats)) install.packages("EnvStats")
+if(!require(MLmetrics)) install.packages("MLmetrics")
 if(!require(mltest)) install.packages("mltest")
 if(!require(ggrepel)) install.packages("ggrepel")
 
@@ -40,7 +41,7 @@ analysis.metrics <- function(){
   Entropy.Complexity.D3T1$Complexity = Entropy.Complexity.csv[1:n.total, 2]
   Entropy.Complexity.D3T1$Region = regions
   
-  trainIndex = createDataPartition(Entropy.Complexity.D3T1$Region, p = split, list = FALSE)
+    trainIndex = createDataPartition(Entropy.Complexity.D3T1$Region, p = split, list = FALSE)
   
   x1 = data.frame(Entropy.Complexity.D3T1$Entropy[trainIndex], Entropy.Complexity.D3T1$Complexity[trainIndex])
   y1 = factor(Entropy.Complexity.D3T1$Region[trainIndex])
@@ -894,14 +895,10 @@ plot.dimension.tau <- function(){
      ROC.curve =  ggplot(data = metrics.calculated.csv,
                          aes(x = FPR, y = TPR,
                              group = D, shape = D, color = D)) + 
-       #geom_text(aes(label = legend.names), size = 2.5, hjust=1, vjust=2.5) +
-       #geom_label_repel(aes(label = legend.names, fill = D), color = 'white', size = 2.5) +
        geom_label_repel(aes(label = legend.names), box.padding   = 0.35, point.padding = 0.5, segment.color = 'grey50', size = 2.5, parse = TRUE) +
-       theme_classic() + 
        geom_point(shape = point.shape, size = 4) + scale_color_manual(values = rainbow_colors) +
        ylab("True Positive Rate") +
        xlab("False Positive Rate") +
-       #ggtitle("ROC Curve") +
        scale_shape_identity() +
        theme_few(base_size = 12, base_family = "serif")  +
        theme(plot.title = element_text(hjust=0.5))

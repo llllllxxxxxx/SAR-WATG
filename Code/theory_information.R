@@ -9,7 +9,6 @@
 ####################################################################################
 
 if(!require(ggplot2)) install.packages("ggplot2")
-if(!require(ggthemes)) install.packages("ggthemes")
 
 shannonEntropy <- function(p){
   h <- p * log(p)

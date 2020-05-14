@@ -15,7 +15,6 @@ if(!require(gtools)) install.packages("gtools")
 if(!require(ggplot2)) install.packages("ggplot2")
 if(!require(ggthemes)) install.packages("ggthemes")
 if(!require(ggpubr)) install.packages("ggpubr")
-if(!require(extrafont)) install.packages("extrafont")
 source("theory_information.R")
 
 ###################################### Function of Plot ################################################
