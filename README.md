@@ -2,7 +2,6 @@
 
 #### [Eduarda C. Chagas](mailto:eduarda.chagas@dcc.ufmg.br), [Alejandro C. Frery](mailto:acfrery@laccan.ufal.br), [Heitor S. Ramos](mailto:ramosh@dcc.ufmg.br), and [Osvaldo A. Rosso](mailto:oarosso@gmail.com)
 
-</br>
 
 
 ### This repository contains all the data and code used to develop our research in the related paper submitted to J-STARS. 
