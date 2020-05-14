@@ -33,7 +33,7 @@ Our procedure consists of the following steps:
 
 For this analysis, three SAR images with different regions were used, available at <a href="https://uavsar.jpl.nasa.gov/cgi-bin">jet propulsion laboratory</a>.:
 
-- Parque Nacional Sierra del Lacandon, Guatemala (acquired April 10, 2015).
+- Parque Nacional Sierra del Lacandón, Guatemala (acquired April 10, 2015).
 
 - Cape Canaveral Ocean Regions (acquired September 22, 2016).
 
