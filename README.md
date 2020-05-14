@@ -96,11 +96,11 @@ latex2exp      0.4.0
 raster         2.9.5
 ```
 
-### Files
+### Additional files
 
-[Submitted file](<./Reports/Publications/JSTARS 2020/SARTexture-IT.R0.pdf>)
+- [Submitted file](<https://github.com/EduardaChagas/SAR-WATG/blob/master/Publications/JSTARS%202020/SARTexture-IT.R0.pdf>)
 
-[References](<./Reports/Publications/JSTARS 2020/ReferencesR0.html>)
+- [References](<./Reports/Publications/JSTARS 2020/ReferencesR0.html>)
 
 ---
 
