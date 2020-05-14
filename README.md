@@ -56,13 +56,6 @@ We manually selected 160 samples to compose the dataset used in the experiments.
 - `/Images`- Illustration of the results obtained throughout the research, alongside the methodology files corresponding to our *overview* figure; 
 - `/Reports`- the reports developed during the study. 
 
-#### In the code folder, we have the following scripts:
-- `Generate_polsar_image.R`- Contains the functions of reading and analysis of SAR image.
-- `Plot_SAR_TimeSeries.R`- It executes the plotting of SAR data as one-dimensional data
-- `Plot_Transition_graph.R`- It executes the plotting of SAR image results using Hilbert curves and WATG.
-- `Theory_Information.R`- Contains the implementation of the information theory descriptors used throughout the work.
-- `Transition_graph.R`- It executes the analysis of SAR images using Hilbert curves and WATG.
-
 ### Software requirements
 
 This code version is tested on the Linux operating system Ubuntu 18.10.
@@ -87,16 +80,21 @@ install.packages(c('devtools', 'ggplot2', 'ggthemes', 'ggpubr', 'gtools', 'igrap
 The latest version of these packages was used by October 2019:
 
 ```
-devtools       2.2.1   
-ggplot2        3.2.1       
+devtools       2.2.2 
+ggplot2        3.3.0       
 ggthemes       4.2.0      
-ggpubr         0.2     
-gtools         3.8.1      
+ggpubr         0.2.5  
+gtools         3.8.2      
 igraph         1.2.4.1       
-statcomp       0.0.1.1000      
+statcomp       0.0.1.1000  
+caret          6.0.84
+EnvStats       2.3.1
+MLmetrics      1.1.1
+mltest         1.0.1
+ggrepel        0.8.2
+latex2exp      0.4.0
+raster         2.9.5
 ```
-
-This experiment is very computationally expensive and takes time to run, as we evaluate 160 samples of SAR images. 
 
 ### Files
 
